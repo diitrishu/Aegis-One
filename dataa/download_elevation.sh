@@ -1,26 +1,31 @@
 #!/bin/bash
 
 # Download SRTM Elevation Data for North India
-# 30m resolution (SRTM 1 Arc-Second)
+# ~90m resolution (CGIAR-CSI SRTM v4.1, 3 arc-second)
 
 echo "Downloading SRTM Elevation Data for North India..."
-echo "Resolution: 30m (1 arc-second)"
+echo "Resolution: ~90m (3 arc-second)"
 echo "Source: CGIAR-CSI SRTM"
 echo ""
 
 # Create output directory
 mkdir -p datasets/elevation
 
-# North India coverage: approximately N25-N35, E75-E85
+# North India coverage: N25-N35, E75-E85
 # SRTM tiles are named by lower-left corner coordinates
 
 # List of tiles needed for North India
-# Format: srtm_XX_YY where XX is longitude zone, YY is latitude zone
+# 5x5 degree SRTM tiles are numbered srtm_X_Y with
+#   X = (longitude + 180) / 5 + 1   (X=52 -> 75E-80E, X=53 -> 80E-85E)
+#   Y = (60 - latitude) / 5 + 1     (Y=06 -> 35N-30N, Y=07 -> 30N-25N)
+# NOTE: an earlier version of this script listed srtm_44_*/srtm_45_*, which are
+# the Middle East (35E-45E). If you have those files in datasets/elevation/,
+# delete them before running process_elevation.py.
 TILES=(
-    "srtm_44_06"  # N25-N30, E75-E80
-    "srtm_45_06"  # N25-N30, E80-E85
-    "srtm_44_05"  # N30-N35, E75-E80
-    "srtm_45_05"  # N30-N35, E80-E85
+    "srtm_52_07"  # N25-N30, E75-E80
+    "srtm_53_07"  # N25-N30, E80-E85
+    "srtm_52_06"  # N30-N35, E75-E80
+    "srtm_53_06"  # N30-N35, E80-E85
 )
 
 BASE_URL="https://srtm.csi.cgiar.org/wp-content/uploads/files/srtm_5x5/TIFF"

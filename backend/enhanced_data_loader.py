@@ -18,6 +18,7 @@ from datetime import datetime
 # Optional rasterio import (graceful degradation if not available)
 try:
     import rasterio
+    from rasterio.windows import Window
     from rasterio.mask import mask as rasterio_mask
     RASTERIO_AVAILABLE = True
 except ImportError:
@@ -192,7 +193,7 @@ class EnhancedDataLoader:
                 with open(stats_path, 'r') as f:
                     self.population_stats = json.load(f)
             
-            print(f"✓ Loaded population raster (100m resolution)")
+            print(f"✓ Loaded population raster ({round(abs(self.population_raster.res[0]) * 111320)} m cells)")
             return True
             
         except Exception as e:
@@ -326,7 +327,7 @@ class EnhancedDataLoader:
                 with open(stats_path, 'r') as f:
                     self.elevation_stats = json.load(f)
             
-            print(f"✓ Loaded elevation DEM (30m resolution)")
+            print(f"✓ Loaded elevation DEM ({round(abs(self.elevation_raster.res[0]) * 111320)} m cells)")
             return True
             
         except Exception as e:
@@ -352,7 +353,10 @@ class EnhancedDataLoader:
             # Sample raster at point
             lon, lat = location[1], location[0]
             row, col = self.elevation_raster.index(lon, lat)
-            elevation = self.elevation_raster.read(1)[row, col]
+            if not (0 <= row < self.elevation_raster.height and 0 <= col < self.elevation_raster.width):
+                return None  # point is outside the DEM coverage
+            # Read just the one pixel instead of the whole raster
+            elevation = self.elevation_raster.read(1, window=Window(col, row, 1, 1))[0, 0]
             
             # Check for nodata
             if elevation == self.elevation_raster.nodata:
@@ -452,6 +456,19 @@ class EnhancedDataLoader:
     
     # ==================== UTILITY METHODS ====================
     
+    def _resolution_m(self, opened_raster, folder: str, filename: str) -> Optional[int]:
+        """Approximate cell size in metres, read from the raster header if not yet opened."""
+        try:
+            if opened_raster is not None:
+                return round(abs(opened_raster.res[0]) * 111320)
+            path = self.dataa_dir / folder / "processed" / filename
+            if self.data_available.get(folder) and path.exists():
+                with rasterio.open(path) as r:
+                    return round(abs(r.res[0]) * 111320)
+        except Exception:
+            pass
+        return None
+
     def get_data_status(self) -> Dict:
         """Get status of all enhanced datasets"""
         
@@ -462,11 +479,11 @@ class EnhancedDataLoader:
             
             'population_available': self.data_available['population'],
             'population_loaded': self.population_raster is not None,
-            'population_resolution_m': 100 if self.population_raster else None,
+            'population_resolution_m': self._resolution_m(self.population_raster, 'population', 'north_india_population_2020.tif'),
             
             'elevation_available': self.data_available['elevation'],
             'elevation_loaded': self.elevation_raster is not None,
-            'elevation_resolution_m': 30 if self.elevation_raster else None,
+            'elevation_resolution_m': self._resolution_m(self.elevation_raster, 'elevation', 'north_india_dem.tif'),
             
             'rasterio_available': RASTERIO_AVAILABLE
         }

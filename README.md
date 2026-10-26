@@ -87,7 +87,7 @@ docker compose up --build
 
 ## 🗄️ Data setup
 
-**Works out of the box.** The data the app reads at runtime is included (about 40 MB), so after cloning you can run the system straight away:
+**Works out of the box.** The data the app reads at runtime is included (about 50 MB), so after cloning you can run the system straight away:
 
 | Included file | Used for |
 |---|---|
@@ -96,11 +96,14 @@ docker compose up --build
 | `backend/data/infrastructure/highways_major.gpkg` | Major highway network |
 | `backend/data/disasters/` (flood inventory, landslide points, active fires) | Historical disaster data (1,006 floods, 332 landslides, active fires) |
 | `dataa/datasets/seismic/processed/` | Earthquake catalogue for the V2 earthquake and seismic-risk endpoints |
+| `dataa/datasets/population/processed/` | Population raster for `/api/v2/population` and disaster reports (WorldPop 2020, ~550 m cells) |
 | `frontend/public/data/risk_zones/*.geojson` | Risk-zone overlays on the map |
 
-**Optional, large datasets (not in the repo).** These are only needed for the extra V2 population and elevation endpoints, offline routing and the QGIS server, and can be rebuilt:
+**Population** uses a compact copy of the WorldPop 2020 raster: the original 100 m cells summed into ~550 m cells (519 MB down to 10 MB, total population preserved exactly). Queries with a radius of about 5 km or more match the full-resolution data to within roughly 1%; very small radii (1 km or less) are coarser. For full resolution, run `dataa/download_population.sh` and `process_population.py`; the backend works with either. `dataa/make_lite_population.py` shows how the compact copy was made.
 
-- **Population and elevation rasters (V2):** run the scripts in [`dataa/`](dataa/QUICKSTART.md) (`download_all.sh`, then `process_all.sh`). Without them `/api/v2/population` and `/api/v2/elevation` return empty results; everything else is unaffected.
+**Not in the repo (needs a one-time download):**
+
+- **Elevation (V2):** `/api/v2/elevation` and `/api/v2/flood-risk` return empty results until you build the DEM. Run `dataa/download_elevation.sh` and then `python process_elevation.py` from `dataa/` (this needs internet access to the CGIAR-CSI SRTM server; the source terms do not allow redistributing the tiles, which is why they are not committed). The tile list in these scripts was corrected: earlier versions pointed at the Middle East tiles (`srtm_44_*`/`srtm_45_*`), and `process_elevation.py` now refuses a DEM that does not cover North India.
 - **Routing (OSRM) and QGIS server:** download an OSM extract (for example Uttar Pradesh from [Geofabrik](https://download.geofabrik.de/asia/india.html)) and build the OSRM files via `docker compose`, see `backend/docker-compose.yml`. `working_project.qgs` and the full source datasets are not included.
 
 The original inventory of source datasets is in [`docs/DATA_INVENTORY.md`](docs/DATA_INVENTORY.md); helper scripts for the highway layers are in `backend/scripts/`.

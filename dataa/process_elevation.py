@@ -51,6 +51,16 @@ out_meta.update({
     "compress": "lzw"
 })
 
+# Sanity check: the DEM must cover North India (72-88E, 24-32N)
+west, south, east, north = rasterio.transform.array_bounds(mosaic.shape[1], mosaic.shape[2], out_trans)
+if east < 72 or west > 88 or north < 24 or south > 32:
+    print(f"\n\u2717 DEM covers {west:.0f}-{east:.0f}E, {south:.0f}-{north:.0f}N, which is not North India (72-88E, 24-32N).")
+    print("  Check the tiles in datasets/elevation/ (expected srtm_52_06, srtm_53_06, srtm_52_07, srtm_53_07)")
+    print("  and delete any srtm_44_*/srtm_45_* files, then re-run download_elevation.sh.")
+    for src in src_files_to_mosaic:
+        src.close()
+    raise SystemExit(1)
+
 # Save merged DEM
 output_dem = OUTPUT_DIR / "north_india_dem.tif"
 with rasterio.open(output_dem, "w", **out_meta) as dest:
@@ -81,7 +91,7 @@ stats = {
     "raster_info": {
         "width": mosaic.shape[2],
         "height": mosaic.shape[1],
-        "resolution_m": 30
+        "resolution_m": 90
     }
 }
 
@@ -141,5 +151,5 @@ print(f"\nLow-lying areas (flood risk):")
 print(f"  < 10m:      {stats['low_lying_areas']['below_10m']:,} cells")
 print(f"  10-50m:     {stats['low_lying_areas']['10m_to_50m']:,} cells")
 print(f"  50-100m:    {stats['low_lying_areas']['50m_to_100m']:,} cells")
-print(f"\nRaster: {stats['raster_info']['width']} x {stats['raster_info']['height']} pixels @ 30m resolution")
+print(f"\nRaster: {stats['raster_info']['width']} x {stats['raster_info']['height']} pixels @ ~90m resolution")
 print("="*50)

@@ -77,10 +77,10 @@ https://doi.org/10.5258/SOTON/WP00675
 
 **Specifications:**
 - **Region:** North India (tiles covering 24-32°N, 72-88°E)
-- **Resolution:** 30m (~1 arc-second)
+- **Resolution:** ~90m (3 arc-second, CGIAR-CSI SRTM v4.1)
 - **Format:** GeoTIFF
 - **Size:** ~100-200 MB (4 tiles)
-- **Tiles:** srtm_44_06, srtm_45_06, srtm_44_05, srtm_45_05
+- **Tiles:** srtm_52_07, srtm_53_07, srtm_52_06, srtm_53_06 (75-85E, 25-35N)
 
 **Files:**
 - `datasets/elevation/srtm_*.tif` - Individual SRTM tiles
@@ -165,7 +165,7 @@ python process_elevation.py
 ### Elevation Data
 - **Completeness:** Full coverage of North India
 - **Accuracy:** ±16m vertical accuracy
-- **Resolution:** 30m horizontal
+- **Resolution:** ~90m horizontal
 - **Limitations:** May have artifacts in mountainous areas
 
 ---

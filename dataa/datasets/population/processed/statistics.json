@@ -1,0 +1,16 @@
+{
+  "region": "North India (24-32N, 72-88E)",
+  "source": "WorldPop 2020 UN-adjusted (ind_ppp_2020_UNadj), 100 m cells summed into 6x6 blocks",
+  "resolution_m": 557,
+  "total_population": 579794688,
+  "population_density_per_km2": 623.0,
+  "people_per_cell": {
+    "min": 0.003221741644665599,
+    "max": 25302.365234375,
+    "mean": 171.73,
+    "median": 83.74
+  },
+  "cells_over_1000_per_km2": 587566,
+  "cells_over_5000_per_km2": 25700,
+  "cells_over_10000_per_km2": 9121
+}

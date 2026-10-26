@@ -18,6 +18,12 @@ backend/data/disasters/*
 
 dataa/venv/
 dataa/datasets/*
+!dataa/datasets/population/
+dataa/datasets/population/*
+!dataa/datasets/population/processed/
+dataa/datasets/population/processed/*
+!dataa/datasets/population/processed/north_india_population_2020.tif
+!dataa/datasets/population/processed/statistics.json
 !dataa/datasets/seismic/
 dataa/datasets/seismic/*
 !dataa/datasets/seismic/processed/
@@ -29,6 +35,7 @@ osm_data/
 *.osrm*
 *.tif
 *.tiff
+!dataa/datasets/population/processed/north_india_population_2020.tif
 
 # Dependencies / build output
 node_modules/

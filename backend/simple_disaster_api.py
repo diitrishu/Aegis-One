@@ -1035,11 +1035,21 @@ def get_flood_risk():
 
         high_risk = len([z for z in zones if z.get('risk_level') == 'HIGH'])
 
+        # Shapely geometries are not JSON serializable; convert to GeoJSON
+        def _serialize_zone(z):
+            out = dict(z)
+            geom = out.get('geometry')
+            if geom is not None and hasattr(geom, '__geo_interface__'):
+                out['geometry'] = geom.__geo_interface__
+            if isinstance(out.get('location'), tuple):
+                out['location'] = list(out['location'])
+            return out
+
         return jsonify({
             'success': True,
             'count': len(zones),
             'high_risk_count': high_risk,
-            'zones': zones[:50],
+            'zones': [_serialize_zone(z) for z in zones[:50]],
             'version': '2.0'
         })
     except Exception as e:
