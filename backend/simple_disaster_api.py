@@ -24,6 +24,9 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 CORS(app)  # Enable CORS for frontend requests
 
+from layers_api import layers_bp  # map layers, damage assessments, population grid
+app.register_blueprint(layers_bp)
+
 # Configuration
 DATA_DIR = Path(__file__).parent / "data"
 GEOPACKAGE_PATH = DATA_DIR / "up_india_complete.gpkg"  # Use complete dataset with facilities
@@ -314,6 +317,25 @@ def create_disaster_legacy():
         if not result.get('success'):
             return jsonify(result), 400
 
+        # Real response data: facilities inside the affected radius and the population living there
+        import geo_layers
+        counts = {}
+        for ftype, key in (("hospital", "hospitals"), ("fire_station", "fire_stations"), ("police_station", "police_stations")):
+            try:
+                counts[key] = len(geo_layers.nearby_facilities(lon, lat, ftype, radius_km * 1000, 10000))
+            except Exception as exc:
+                logger.warning(f"Facility count failed for {ftype}: {exc}")
+                counts[key] = 0
+        affected = 0
+        population_assessed = False
+        if v2_system:
+            try:
+                affected = int(v2_system.get_population_in_radius(location=(lat, lon), radius_km=radius_km) or 0)
+                population_assessed = True
+            except Exception as exc:
+                logger.warning(f"Population assessment failed: {exc}")
+        total = sum(counts.values())
+
         return jsonify({
             "success": True,
             "disaster_id": result.get("disaster_id"),
@@ -324,13 +346,12 @@ def create_disaster_legacy():
                 "radius": f"{radius_km:g} km"
             },
             "response": {
-                "agencies_notified": True,
-                "facilities_identified": True,
-                "facilities": {
-                    "hospitals": 0,
-                    "fire_stations": 0,
-                    "police_stations": 0
-                }
+                "agencies_notified": total > 0,
+                "facilities_identified": total > 0,
+                "population_assessed": population_assessed,
+                "coordination_initiated": True,
+                "affected_population": affected,
+                "facilities": {**counts, "total_capacity": total}
             }
         }), 201
 
@@ -374,6 +395,12 @@ def get_status():
             # Get disaster counts
             cursor.execute(f"SELECT COUNT(*) FROM {DISASTER_LAYER}")
             total_disasters = cursor.fetchone()[0]
+
+            # "active" = reported in the last 7 days (there is no separate close/resolve workflow)
+            from datetime import timedelta
+            cursor.execute(f"SELECT COUNT(*) FROM {DISASTER_LAYER} WHERE created_at >= ?",
+                           ((datetime.now() - timedelta(days=7)).isoformat(),))
+            active_disasters = cursor.fetchone()[0]
             
             # Get facility counts (try to query, default to 0 if tables don't exist)
             hospitals = 0
@@ -414,7 +441,7 @@ def get_status():
                 "system_ready": True,
                 "total_disasters": total_disasters,
                 "historical_disasters": total_disasters,
-                "active_disasters": 0,  # Could be enhanced to track active vs historical
+                "active_disasters": active_disasters,
                 "total_facilities": total_facilities,
                 "hospitals": hospitals,
                 "fire_stations": fire_stations,
@@ -539,7 +566,11 @@ def get_facilities():
         # Sort by distance and limit results
         facilities.sort(key=lambda x: x['distance_km'])
         facilities = facilities[:limit]
-        
+        for f in facilities:  # display fields used by the dashboard's facility finder
+            f.setdefault('distance', f"{f['distance_km']} km")
+            f.setdefault('capacity', 'N/A')
+            f.setdefault('status', 'Operational')
+
         logger.info(f"Found {len(facilities)} facilities within {radius}km of ({lat}, {lon})")
         
         return jsonify({

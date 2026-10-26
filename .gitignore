@@ -4,6 +4,9 @@
 # see "Data setup" in the README for how to rebuild them.
 backend/data/*
 !backend/data/up_india_complete.gpkg
+!backend/data/routing/
+backend/data/routing/*
+!backend/data/routing/road_graph_up.npz
 !backend/data/boundaries/
 backend/data/boundaries/*
 !backend/data/boundaries/North_India_Boundary_wgs84.*

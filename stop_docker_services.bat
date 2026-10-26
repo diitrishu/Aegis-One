@@ -5,7 +5,7 @@ echo ========================================
 echo.
 
 cd backend
-docker-compose down
+docker compose down
 
 echo.
 echo All services stopped.

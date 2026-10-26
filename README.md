@@ -55,31 +55,37 @@
 ### Windows (one command)
 
 ```bat
+pip install -r backend\requirements.api.txt
+cd frontend && npm install && cd ..
 start_system.bat
 ```
 
-This opens three windows: the main API (port 5000), the live-tracking API (port 5052) and the frontend (port 3000).
+This opens five windows: the main API (5000), the routing API (8082), the WMS map server (8081), the live-tracking API (5052) and the frontend (3000).
 
 ### Manual startup
 
 ```bash
-# Terminal 1 - main API (needs the GeoPackage, see "Data setup" below)
-cd backend && pip install -r requirements.api.txt && python simple_disaster_api.py
+pip install -r backend/requirements.api.txt        # once
+(cd frontend && npm install)                       # once
 
-# Terminal 2 - live tracking API
-cd backend && pip install -r requirements.location.txt && python location_tracking_api.py
-
-# Terminal 3 - frontend
-cd frontend && npm install && npm start
+cd backend
+python simple_disaster_api.py &     # API + layers/damage/population   :5000
+python routing_api.py &             # OSM road routing                 :8082
+python wms_server.py &              # map layers (WMS)                 :8081
+python location_tracking_api.py &   # live tracking (websocket)        :5052
+cd ../frontend && npm start         # web UI                           :3000
 ```
+
+Open http://localhost:3000/map.html. Nothing else to install or download: the road network, facilities, risk zones, population and elevation are all in the repository.
 
 ### Docker (optional)
 
 ```bash
 cd backend
-cp .env.example .env      # then set POSTGRES_PASSWORD
-docker compose up --build
+docker compose up --build      # everything, then open http://localhost:3000
 ```
+
+The old QGIS Server / OSRM / PostGIS stack is kept behind a profile (`docker compose --profile legacy up`, needs `backend/.env`, see `.env.example`). The app does not need it.
 
 **Access Dashboard**: http://localhost:3000/index-new.html  
 **Live Tracking**: http://localhost:3000/live-tracking.html  
@@ -92,6 +98,7 @@ docker compose up --build
 | Included file | Used for |
 |---|---|
 | `backend/data/up_india_complete.gpkg` | Hospitals (5,870), fire stations (78), police stations (548), highways, risk-zone layers, user-reported disasters (starts empty) |
+| `backend/data/routing/road_graph_up.npz` | Road network for routing: OpenStreetMap roads of Uttar Pradesh and neighbouring areas, split at junctions (10 MB). Powers `/route`, `/emergency-route` and the highway map layer |
 | `backend/data/boundaries/North_India_Boundary_wgs84.*` | North India boundary |
 | `backend/data/infrastructure/highways_major.gpkg` | Major highway network |
 | `backend/data/disasters/` (flood inventory, landslide points, active fires) | Historical disaster data (1,006 floods, 332 landslides, active fires) |
@@ -106,24 +113,29 @@ docker compose up --build
 
 *Elevation data: Terrain Tiles, Mapzen/Tilezen via AWS Open Data, derived from NASA SRTM. Population data: WorldPop (CC BY 4.0).*
 
-**Not in the repo (optional):**
+**Road network** (`road_graph_up.npz`) is built from OpenStreetMap by `backend/scripts/build_road_graph.py` (needs `osmium` and an OSM extract, for example from [Geofabrik](https://download.geofabrik.de/asia/india.html)). Routing is a custom A* search with fastest, shortest, safest and emergency-vehicle cost models, turn-by-turn instructions and alternative routes. *Road data (c) OpenStreetMap contributors, ODbL.*
 
-- **Routing (OSRM) and QGIS server:** download an OSM extract (for example Uttar Pradesh from [Geofabrik](https://download.geofabrik.de/asia/india.html)) and build the OSRM files via `docker compose`, see `backend/docker-compose.yml`. `working_project.qgs` and the full source datasets are not included.
+**Not in the repo (optional):** `working_project.qgs`, the OSM extract and the full-resolution source datasets. The app does not need them.
 
 The original inventory of source datasets is in [`docs/DATA_INVENTORY.md`](docs/DATA_INVENTORY.md); helper scripts for the highway layers are in `backend/scripts/`.
 
-## ⚠️ Known gaps
+## ✅ What runs out of the box
 
-These files are referenced by the code but are not in the repository yet:
+| Feature | Served by |
+|---|---|
+| Interactive map, hospital / fire / police / flood / fire-risk / earthquake / landslide layers, GetFeatureInfo popups | WMS server (8081) |
+| Point-to-point routing, alternatives, turn-by-turn, multi-stop routes | Routing API (8082) |
+| Emergency response routes to the nearest hospital / fire station / police | Routing API (8082) |
+| Draw a disaster area, buffer analysis, affected facilities and population | API (5000) |
+| Damage assessment drawing and saving | API (5000) |
+| Population density and elevation layers | API (5000) |
+| Strategic analysis (hospitals at risk, coverage gaps, priority zones) | Browser |
+| PNG / PDF / GeoJSON / KML export | Browser |
+| Offline cache for map data, live weather and active-disaster panel | Browser (weather from Open-Meteo) |
+| Upload GeoJSON, add external GeoJSON / WMS layers, layer ordering | Browser |
+| Live vehicle tracking | Location API (5052) |
 
-| Referenced from | Missing file | Effect |
-|---|---|---|
-| `frontend/server.js` (`/api/status`, `/api/create_disaster`, `/api/facilities`, `/api/report/:id`) | `backend/disaster_cli_clean.py` | These four Node routes return errors; the pages that talk directly to the Python API on port 5000 are unaffected |
-| `map.html`, `map_professional.html` | `js/strategic-analysis.js`, `js/offline-cache.js`, `js/realtime-data.js`, `js/reporting.js` | 404s in the browser console; some map panels do not initialise |
-| `backend/docker-compose.yml` | `routing_api.py`, `emergency_facilities.json` (routing-api), `config/qgis-nginx.conf` (qgis-server), `sql/` and `plugins/` mounts | The `routing-api` and `qgis-server` containers cannot build until these are added |
-
-Pinned versions in `backend/requirements.api.txt` (e.g. `shapely==2.0.2`, `numpy<2`) target Python 3.11 (the Docker images); on Python 3.13 install unpinned versions instead.
-
+Basemap tiles and live weather come from the internet, so those need a connection. Road-closure traffic data is only shown if you set `realtime.trafficUrl` in `frontend/public/js/dynamic-config.js`.
 
 ---
 
@@ -922,8 +934,8 @@ Live Dashboard ← WebSocket (location_broadcast) ← Server
 
 ```
 1. User reports disaster → Frontend form submission
-2. POST /api/create_disaster → Express server
-3. Spawns Python CLI → disaster_cli_clean.py
+2. POST /api/create_disaster → Express server (proxied to the Python API)
+3. Python API (simple_disaster_api.py) runs the analysis
 4. Spatial analysis:
    • Buffer zone around disaster point
    • Spatial join with facilities
@@ -942,7 +954,10 @@ disaster-response-system/
 ├── backend/
 │   ├── location_tracking_api.py       # WebSocket server (NEW v2.0)
 │   ├── disaster_response_system.py    # Core disaster system
-│   ├── disaster_cli_clean.py          # CLI interface
+│   ├── simple_disaster_api.py         # Main API (5000)
+│   ├── routing_api.py                 # OSM road routing (8082)
+│   ├── wms_server.py                  # WMS map server (8081)
+│   ├── road_graph.py, geo_layers.py, layers_api.py
 │   ├── convert_risk_zones.py          # Risk zone converter
 │   ├── requirements.location.txt      # Live tracking deps (NEW)
 │   └── data/

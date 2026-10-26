@@ -4,7 +4,7 @@
  */
 
 const DynamicConfig = {
-    // QGIS Server Configuration
+    // WMS map service (backend/wms_server.py; any WMS server with the same layer names also works)
     server: {
         baseUrl: "http://localhost:8081/ows/",
         projectFile: "dynamic_project.qgs",
@@ -14,11 +14,17 @@ const DynamicConfig = {
 
     // Disaster API Configuration
     api: {
-        baseUrl: "http://localhost:5050/api",
+        baseUrl: "http://localhost:5000/api",
         timeout: 15000
     },
 
-    // OSRM Routing Configuration
+    // Live data feeds (see js/realtime-data.js). trafficUrl is optional: JSON { closures: [{ geometry }] }
+    realtime: {
+        refreshMs: 60000,
+        trafficUrl: null
+    },
+
+    // Routing API (backend/routing_api.py, OSRM-compatible responses)
     routing: {
         osrmUrl: 'http://localhost:5000',
         apiUrl: 'http://localhost:8082',

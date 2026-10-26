@@ -461,7 +461,7 @@ class DisasterDrawingManager {
                 const within = spatialEngine.findFeaturesWithinBuffer(features, buffer, { includeDistance: false });
                 return `${item.label}: ${within.length}`;
             });
-            html += `&nbsp;? ${distance}m: ${counts.join(', ')}<br>`;
+            html += `&nbsp;&bull; ${distance}m: ${counts.join(', ')}<br>`;
         });
 
         resultsEl.innerHTML = html;
@@ -525,18 +525,18 @@ class DisasterDrawingManager {
             });
             const result = await response.json();
             if (result.success) {
-                this.showMessage('? Damage assessment saved', 'success');
+                this.showMessage('Damage assessment saved', 'success');
                 this.drawingLayer.removeLayer(form.currentLayer);
                 this.hideDamageForm();
                 if (window.dataLayerManager) {
                     await window.dataLayerManager.loadDamageLayer();
                 }
             } else {
-                this.showMessage(`? Error: ${result.errors?.join(', ') || 'Unknown'}`, 'error');
+                this.showMessage(`Error: ${result.errors?.join(', ') || 'Unknown'}`, 'error');
             }
         } catch (error) {
             console.error('Error submitting damage assessment:', error);
-            this.showMessage('? Failed to save damage assessment', 'error');
+            this.showMessage('Failed to save damage assessment', 'error');
         } finally {
             this.showLoadingIndicator(false, 'damage');
         }

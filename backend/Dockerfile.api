@@ -1,42 +1,23 @@
+# One image for all Python services; docker-compose picks the command.
+# Build context is the repository root (the API reads rasters from dataa/ too).
 FROM python:3.11-slim
 
-# Install system dependencies for geospatial libraries
-RUN apt-get update && apt-get install -y \
-    gdal-bin \
-    libgdal-dev \
-    libsqlite3-mod-spatialite \
-    libspatialite8 \
-    libspatialite-dev \
-    sqlite3 \
-    curl \
+RUN apt-get update && apt-get install -y --no-install-recommends curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Set environment variables for GDAL
-ENV GDAL_CONFIG=/usr/bin/gdal-config
-ENV CPLUS_INCLUDE_PATH=/usr/include/gdal
-ENV C_INCLUDE_PATH=/usr/include/gdal
-
-# Set working directory
 WORKDIR /app
+COPY backend/requirements.api.txt backend/requirements.api.txt
+RUN pip install --no-cache-dir -r backend/requirements.api.txt
 
-# Copy requirements first for better caching
-COPY requirements.api.txt .
+COPY backend/*.py backend/
+COPY backend/data backend/data
+COPY dataa/datasets dataa/datasets
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.api.txt
+WORKDIR /app/backend
+ENV PYTHONUNBUFFERED=1
+EXPOSE 5000 5052 8081 8082
 
-# Copy application code
-COPY simple_disaster_api.py disaster_response_system_v2.py ./
-
-# Create data directory
-RUN mkdir -p /app/data
-
-# Expose port
-EXPOSE 5000
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+HEALTHCHECK --interval=30s --timeout=10s --start-period=15s --retries=3 \
     CMD curl -f http://localhost:5000/api/health || exit 1
 
-# Run the application
 CMD ["python", "simple_disaster_api.py"]
