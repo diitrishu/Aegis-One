@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚨 Disaster Response - Interactive Map</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- Leaflet Draw CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css" />
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow: hidden;
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+            padding: 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+            z-index: 1000;
+        }
+        
+        .header h1 {
+            margin: 0;
+            font-size: 1.5rem;
+        }
+        
+        .header .nav-links a {
+            color: white;
+            text-decoration: none;
+            margin-left: 1rem;
+            padding: 0.5rem 1rem;
+            background: rgba(255,255,255,0.2);
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+        
+        .header .nav-links a:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .map-container {
+            display: flex;
+            height: calc(100vh - 70px);
+        }
+        
+        .sidebar {
+            width: 300px;
+            background: white;
+            box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+            overflow-y: auto;
+            padding: 1rem;
+        }
+        
+        #map {
+            flex: 1;
+            height: 100%;
+        }
+        
+        .control-section {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .control-section h4 {
+            margin: 0 0 1rem 0;
+            color: #dc3545;
+            font-size: 1.1rem;
+        }
+        
+        .layer-toggle {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            background: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .layer-toggle:hover {
+            background: #e9ecef;
+        }
+        
+        .layer-toggle input[type="checkbox"] {
+            margin-right: 0.5rem;
+        }
+        
+        .layer-count {
+            margin-left: auto;
+            background: #dc3545;
+            color: white;
+            padding: 0.2rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.8rem;
+        }
+        
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem;
+            background: #f8f9fa;
+            border-radius: 5px;
+            margin-bottom: 1rem;
+        }
+        
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 0.5rem;
+        }
+        
+        .status-dot.online {
+            background: #28a745;
+            box-shadow: 0 0 10px #28a745;
+        }
+        
+        .status-dot.offline {
+            background: #dc3545;
+        }
+        
+        .btn-create-disaster {
+            width: 100%;
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            border: none;
+            color: white;
+            padding: 0.75rem;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .btn-create-disaster:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(220, 53, 69, 0.3);
+        }
+        
+        .leaflet-popup-content {
+            min-width: 250px;
+        }
+        
+        .disaster-form {
+            padding: 0.5rem;
+        }
+        
+        .disaster-form .form-group {
+            margin-bottom: 0.75rem;
+        }
+        
+        .disaster-form label {
+            display: block;
+            margin-bottom: 0.25rem;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+        
+        .disaster-form select,
+        .disaster-form textarea {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        
+        .disaster-form button {
+            width: 100%;
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 0.5rem;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        
+        .disaster-form button:hover {
+            background: #c82333;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><i class="fas fa-map-marked-alt"></i> Disaster Response - Interactive Map</h1>
+        <div class="nav-links">
+            <a href="index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="map_integrated.html"><i class="fas fa-map"></i> Map</a>
+        </div>
+    </div>
+    
+    <div class="map-container">
+        <div class="sidebar">
+            <div class="status-indicator">
+                <div class="status-dot" id="status-dot"></div>
+                <span id="status-text">Checking...</span>
+            </div>
+            
+            <div class="control-section">
+                <h4><i class="fas fa-hospital"></i> Emergency Services</h4>
+                <label class="layer-toggle">
+                    <input type="checkbox" id="hospitals-toggle">
+                    <span>🏥 Hospitals</span>
+                    <span class="layer-count" id="hospitals-count">0</span>
+                </label>
+                <label class="layer-toggle">
+                    <input type="checkbox" id="fire-toggle">
+                    <span>🚒 Fire Stations</span>
+                    <span class="layer-count" id="fire-count">0</span>
+                </label>
+                <label class="layer-toggle">
+                    <input type="checkbox" id="police-toggle">
+                    <span>🚓 Police Stations</span>
+                    <span class="layer-count" id="police-count">0</span>
+                </label>
+            </div>
+            
+            <div class="control-section">
+                <h4><i class="fas fa-draw-polygon"></i> Draw Tools</h4>
+                <p style="font-size: 0.9rem; color: #666;">Use the drawing tools on the map to:</p>
+                <ul style="font-size: 0.9rem; color: #666;">
+                    <li>Draw disaster areas</li>
+                    <li>Mark incident locations</li>
+                    <li>Create evacuation zones</li>
+                </ul>
+            </div>
+            
+            <div class="control-section">
+                <h4><i class="fas fa-info-circle"></i> Instructions</h4>
+                <ol style="font-size: 0.9rem; color: #666;">
+                    <li>Toggle facility layers to view</li>
+                    <li>Use drawing tools to mark areas</li>
+                    <li>Click on markers for details</li>
+                    <li>Create disaster events</li>
+                </ol>
+            </div>
+        </div>
+        
+        <div id="map"></div>
+    </div>
+    
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <!-- Leaflet Draw JS -->
+    <script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
+    
+    <!-- Config -->
+    <script src="js/i18n.js"></script>
+    <script src="js/config.js"></script>
+    
+    <!-- Simple Map JS -->
+    <script src="js/simple-map.js"></script>
+</body>
+</html>

@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Facilities - AeGIS-1</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <link rel="stylesheet" href="css/modern-style.css">
+    <link rel="stylesheet" href="css/ultra-modern.css">
+    
+    <style>
+        #search-map {
+            height: 350px;
+            width: 100%;
+            border-radius: var(--radius-md);
+            margin-top: 1rem;
+        }
+        
+        .map-container-wrapper {
+            display: none;
+            margin-bottom: 1.5rem;
+        }
+        
+        .map-container-wrapper.show {
+            display: block;
+        }
+        
+        .map-instructions {
+            background: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: var(--radius-sm);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .map-instructions i {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <img src="assets/aegis-logo.png" alt="AeGIS-1 logo" class="brand-logo" style="width:32px;height:32px;object-fit:contain;">
+            <span>AeGIS-1</span>
+        </div>
+        <div class="nav-menu">
+            <a href="index-new.html" class="nav-link">
+                <i class="fas fa-home"></i> Dashboard
+            </a>
+            <a href="map-new.html" class="nav-link">
+                <i class="fas fa-map-marked-alt"></i> Map
+            </a>
+            <a href="disasters.html" class="nav-link">
+                <i class="fas fa-exclamation-triangle"></i> Disasters
+            </a>
+            <a href="facilities.html" class="nav-link active">
+                <i class="fas fa-hospital"></i> Facilities
+            </a>
+            <a href="analytics.html" class="nav-link">
+                <i class="fas fa-chart-line"></i> Analytics
+            </a>
+            <a href="about.html" class="nav-link">
+                <i class="fas fa-info-circle"></i> About
+            </a>
+        </div>
+        <div class="nav-actions">
+            <button class="btn-icon" onclick="toggleTheme()">
+                <i class="fas fa-moon"></i>
+            </button>
+            <button class="btn-primary" onclick="window.location.href='disasters.html'">
+                <i class="fas fa-plus"></i> Report Disaster
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div>
+                <h1><i class="fas fa-hospital"></i> Emergency Facilities</h1>
+                <p>Find nearby emergency services and resources</p>
+            </div>
+        </div>
+
+        <!-- Search Section -->
+        <div class="card" style="margin-bottom: 2rem;">
+            <div class="card-header">
+                <h3><i class="fas fa-search"></i> Search Facilities</h3>
+            </div>
+            <div class="card-body">
+                <form id="search-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Latitude</label>
+                            <input type="number" class="form-input" id="search-lat" 
+                                   step="0.0001" placeholder="26.8467" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Longitude</label>
+                            <input type="number" class="form-input" id="search-lon" 
+                                   step="0.0001" placeholder="80.9462" required>
+                        </div>
+                    </div>
+                    
+                    <!-- Map Location Picker -->
+                    <div style="display: flex; gap: 0.75rem; margin-bottom: 1rem;">
+                        <button type="button" class="btn-secondary" style="flex: 1;" onclick="toggleSearchMap()">
+                            <i class="fas fa-map"></i> <span id="search-map-toggle-text">Select Location on Map</span>
+                        </button>
+                        <button type="button" class="btn-secondary" onclick="useMyLocationSearch()">
+                            <i class="fas fa-location-arrow"></i> Use My Location
+                        </button>
+                    </div>
+
+                    <div id="search-map-wrapper" class="map-container-wrapper">
+                        <div class="map-instructions">
+                            <i class="fas fa-info-circle"></i>
+                            <div>
+                                <strong>Click on the map to select search location</strong>
+                                <p style="margin: 0; font-size: 0.875rem; color: var(--text-secondary);">
+                                    The coordinates will be automatically filled in the form
+                                </p>
+                            </div>
+                        </div>
+                        <div id="search-map"></div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Facility Type</label>
+                            <select class="form-select" id="facility-type">
+                                <option value="">All Types</option>
+                                <option value="hospital">Hospitals</option>
+                                <option value="fire_station">Fire Stations</option>
+                                <option value="police_station">Police Stations</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Search Radius (km)</label>
+                            <input type="number" class="form-input" id="search-radius" 
+                                   value="15" min="1" max="100">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary" style="width: 100%;">
+                        <i class="fas fa-search"></i> Search Facilities
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Quick Locations -->
+        <div class="section">
+            <h2 class="section-title">Quick Search Locations</h2>
+            <div class="location-grid">
+                <div class="location-card" onclick="searchLocation(26.8467, 80.9462, 'Lucknow')">
+                    <div class="location-icon">
+                        <i class="fas fa-city"></i>
+                    </div>
+                    <h4>Lucknow</h4>
+                    <p class="location-coords">26.8467, 80.9462</p>
+                    <span class="location-badge">Capital City</span>
+                </div>
+                <div class="location-card" onclick="searchLocation(28.6139, 77.2090, 'Delhi')">
+                    <div class="location-icon">
+                        <i class="fas fa-landmark"></i>
+                    </div>
+                    <h4>Delhi</h4>
+                    <p class="location-coords">28.6139, 77.2090</p>
+                    <span class="location-badge">National Capital</span>
+                </div>
+                <div class="location-card" onclick="searchLocation(26.4499, 80.3319, 'Kanpur')">
+                    <div class="location-icon">
+                        <i class="fas fa-industry"></i>
+                    </div>
+                    <h4>Kanpur</h4>
+                    <p class="location-coords">26.4499, 80.3319</p>
+                    <span class="location-badge">Industrial Hub</span>
+                </div>
+                <div class="location-card" onclick="searchLocation(27.1767, 78.0081, 'Agra')">
+                    <div class="location-icon">
+                        <i class="fas fa-monument"></i>
+                    </div>
+                    <h4>Agra</h4>
+                    <p class="location-coords">27.1767, 78.0081</p>
+                    <span class="location-badge">Heritage City</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results-section" style="display: none;">
+            <div class="section">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <h2 class="section-title" style="margin: 0;">Search Results</h2>
+                    <span id="results-count" class="location-badge" style="font-size: 1rem; padding: 0.5rem 1rem;"></span>
+                </div>
+                <div id="facilities-list"></div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Loading Modal -->
+    <div id="loading-modal" class="modal">
+        <div class="modal-content">
+            <div class="spinner"></div>
+            <p style="margin-top: 1rem;">Searching for facilities...</p>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script src="js/i18n.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/modern-facilities.js"></script>
+</body>
+</html>

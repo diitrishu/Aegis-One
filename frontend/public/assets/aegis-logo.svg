@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-labelledby="title desc">
+  <title id="title">AeGIS-1 Logo</title>
+  <desc id="desc">Shield and compass mark</desc>
+  <defs>
+    <linearGradient id="shieldGrad" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1d4f91"/>
+      <stop offset="1" stop-color="#0f2f60"/>
+    </linearGradient>
+  </defs>
+  <path d="M122 20 L48 46 V114 C48 167 83 206 122 226 C161 206 196 167 196 114 V46 Z" fill="url(#shieldGrad)" stroke="#0f2f60" stroke-width="8"/>
+  <path d="M122 36 L64 56 V112 C64 153 89 185 122 204 C155 185 180 153 180 112 V56 Z" fill="#ffffff" opacity="0.95"/>
+  <path d="M122 48 L78 63 V109 C78 142 97 168 122 184 C147 168 166 142 166 109 V63 Z" fill="url(#shieldGrad)"/>
+  <circle cx="122" cy="128" r="20" fill="#ffffff" stroke="#0f2f60" stroke-width="6"/>
+  <path d="M122 74 L132 118 L176 128 L132 138 L122 182 L112 138 L68 128 L112 118 Z" fill="#173a74"/>
+  <path d="M122 84 L128 120 L164 128 L128 136 L122 172 L116 136 L80 128 L116 120 Z" fill="#ffffff"/>
+  <circle cx="122" cy="128" r="7" fill="#c62828"/>
+</svg>

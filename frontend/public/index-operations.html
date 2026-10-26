@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Emergency Operations Center - AeGIS-1</title>
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/operations-center.css">
+</head>
+<body>
+    <!-- Top Bar -->
+    <div class="top-bar">
+        <div class="system-info">
+            <span class="system-title">🚨 EMERGENCY OPERATIONS CENTER</span>
+            <span class="system-date" id="current-datetime"></span>
+        </div>
+        <div class="system-status">
+            <span class="status-indicator active"></span>
+            <span>SYSTEM OPERATIONAL</span>
+        </div>
+    </div>
+
+    <!-- Main Dashboard Grid -->
+    <div class="dashboard-grid">
+        <!-- Left Sidebar -->
+        <div class="left-sidebar">
+            <!-- Statistics Panel -->
+            <div class="panel stats-panel">
+                <div class="panel-header">SYSTEM STATISTICS</div>
+                <div class="panel-body">
+                    <table class="stats-table">
+                        <tr>
+                            <td>Total Facilities</td>
+                            <td class="stat-value" id="stat-facilities">0</td>
+                        </tr>
+                        <tr>
+                            <td>Hospitals</td>
+                            <td class="stat-value" id="stat-hospitals">0</td>
+                        </tr>
+                        <tr>
+                            <td>Fire Stations</td>
+                            <td class="stat-value" id="stat-fire">0</td>
+                        </tr>
+                        <tr>
+                            <td>Police Stations</td>
+                            <td class="stat-value" id="stat-police">0</td>
+                        </tr>
+                        <tr>
+                            <td>Districts</td>
+                            <td class="stat-value" id="stat-districts">0</td>
+                        </tr>
+                        <tr>
+                            <td>Active Disasters</td>
+                            <td class="stat-value danger" id="stat-disasters">0</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Equipment Panel -->
+            <div class="panel equipment-panel">
+                <div class="panel-header">EQUIPMENT AVAILABILITY</div>
+                <div class="panel-body">
+                    <table class="stats-table">
+                        <tr>
+                            <td>Ambulances</td>
+                            <td class="stat-value" id="equip-ambulance">0</td>
+                        </tr>
+                        <tr>
+                            <td>Fire Trucks</td>
+                            <td class="stat-value" id="equip-fire">0</td>
+                        </tr>
+                        <tr>
+                            <td>Police Vehicles</td>
+                            <td class="stat-value" id="equip-police">0</td>
+                        </tr>
+                        <tr>
+                            <td>Rescue Units</td>
+                            <td class="stat-value" id="equip-rescue">0</td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Resource Staging -->
+            <div class="panel resource-panel">
+                <div class="panel-header">RESOURCE STAGING</div>
+                <div class="panel-body">
+                    <div class="resource-list" id="resource-list">
+                        <div class="resource-item">
+                            <span>Lucknow HQ</span>
+                            <span class="resource-status active">ACTIVE</span>
+                        </div>
+                        <div class="resource-item">
+                            <span>Delhi Command</span>
+                            <span class="resource-status active">ACTIVE</span>
+                        </div>
+                        <div class="resource-item">
+                            <span>Kanpur Base</span>
+                            <span class="resource-status active">ACTIVE</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mini Map 1 -->
+            <div class="panel mini-map-panel clickable" onclick="openDetailedView('risk-zones')">
+                <div class="panel-header">RISK ZONES</div>
+                <div class="panel-body">
+                    <div id="mini-map-1" class="mini-map"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Center Content -->
+        <div class="center-content">
+            <!-- Top Mini Maps Row -->
+            <div class="mini-maps-row">
+                <div class="mini-map-card clickable" onclick="openDetailedView('overview')">
+                    <div class="mini-map-title">OVERVIEW MAP</div>
+                    <div id="mini-map-overview" class="mini-map-small"></div>
+                </div>
+                <div class="mini-map-card clickable" onclick="openDetailedView('transportation')">
+                    <div class="mini-map-title">TRANSPORTATION</div>
+                    <div id="mini-map-transport" class="mini-map-small"></div>
+                </div>
+                <div class="mini-map-card clickable" onclick="openDetailedView('disaster-status')">
+                    <div class="mini-map-title">DISASTER STATUS</div>
+                    <div id="mini-map-disaster" class="mini-map-small"></div>
+                </div>
+                <div class="mini-map-card clickable" onclick="openDetailedView('coverage')">
+                    <div class="mini-map-title">COVERAGE AREAS</div>
+                    <div id="mini-map-coverage" class="mini-map-small"></div>
+                </div>
+            </div>
+
+            <!-- Main Map -->
+            <div class="main-map-container">
+                <div id="main-map" class="main-map"></div>
+                <div class="map-overlay">
+                    <div class="compass-container">
+                        <div class="compass-ring"></div>
+                        <div class="compass-center">
+                            <div class="compass-needle" id="compass-needle">
+                                <div class="needle-disaster"></div>
+                                <div class="needle-facility"></div>
+                            </div>
+                            <div class="compass-info">
+                                <div class="compass-label">COORDINATES</div>
+                                <div class="compass-coords" id="compass-coords">26.8467, 80.9462</div>
+                                <div class="compass-zoom" id="compass-zoom">Zoom: 7</div>
+                            </div>
+                        </div>
+                        <div class="compass-legend">
+                            <div class="legend-item">
+                                <div class="legend-color disaster"></div>
+                                <span>Disaster</span>
+                            </div>
+                            <div class="legend-item">
+                                <div class="legend-color facility"></div>
+                                <span>Facilities</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Charts Row -->
+            <div class="charts-row">
+                <div class="chart-card clickable" onclick="openDetailedView('timeline')">
+                    <div class="chart-title">INCIDENT TIMELINE</div>
+                    <canvas id="chart-timeline"></canvas>
+                </div>
+                <div class="chart-card clickable" onclick="openDetailedView('distribution')">
+                    <div class="chart-title">DISASTER DISTRIBUTION</div>
+                    <canvas id="chart-distribution"></canvas>
+                </div>
+                <div class="chart-card clickable" onclick="openDetailedView('facilities-map')">
+                    <div class="chart-title">FACILITIES MAP</div>
+                    <div id="chart-facilities-map" class="mini-map-small"></div>
+                </div>
+                <div class="chart-card clickable" onclick="openDetailedView('response-zones')">
+                    <div class="chart-title">RESPONSE ZONES</div>
+                    <div id="chart-response-zones" class="mini-map-small"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Right Sidebar -->
+        <div class="right-sidebar">
+            <!-- GPS Tracking -->
+            <div class="panel gps-panel">
+                <div class="panel-header">GPS TRACKING</div>
+                <div class="panel-body">
+                    <div class="gps-status">
+                        <div class="gps-indicator active"></div>
+                        <span>ACTIVE UNITS: <span id="active-units-count">0</span></span>
+                    </div>
+                    <button class="panel-button" onclick="window.location.href='live-tracking.html'">
+                        <i class="fas fa-map-marker-alt"></i> OPEN LIVE TRACKING
+                    </button>
+                </div>
+            </div>
+
+            <!-- Video Feed Placeholder -->
+            <div class="panel video-panel">
+                <div class="panel-header">COMMAND CENTER</div>
+                <div class="panel-body">
+                    <div id="command-center-video" class="command-center-video">
+                        <!-- YouTube player will be inserted here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Units -->
+            <div class="panel units-panel">
+                <div class="panel-header">ACTIVE UNITS</div>
+                <div class="panel-body">
+                    <div class="units-list" id="units-list">
+                        <div class="unit-item">
+                            <span class="unit-icon police"><i class="fas fa-shield-alt"></i></span>
+                            <span>Police Units: <span id="police-units">0</span></span>
+                        </div>
+                        <div class="unit-item">
+                            <span class="unit-icon ambulance"><i class="fas fa-ambulance"></i></span>
+                            <span>Ambulances: <span id="ambulance-units">0</span></span>
+                        </div>
+                        <div class="unit-item">
+                            <span class="unit-icon fire"><i class="fas fa-fire-extinguisher"></i></span>
+                            <span>Fire Units: <span id="fire-units">0</span></span>
+                        </div>
+                        <div class="unit-item">
+                            <span class="unit-icon rescue"><i class="fas fa-helicopter"></i></span>
+                            <span>Rescue Units: <span id="rescue-units">0</span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Status Tables -->
+            <div class="panel status-panel">
+                <div class="panel-header">FACILITY STATUS</div>
+                <div class="panel-body">
+                    <table class="status-table">
+                        <tr>
+                            <td>Hospitals</td>
+                            <td><span class="status-badge operational">OPERATIONAL</span></td>
+                        </tr>
+                        <tr>
+                            <td>Fire Stations</td>
+                            <td><span class="status-badge operational">OPERATIONAL</span></td>
+                        </tr>
+                        <tr>
+                            <td>Police</td>
+                            <td><span class="status-badge operational">OPERATIONAL</span></td>
+                        </tr>
+                        <tr>
+                            <td>Communications</td>
+                            <td><span class="status-badge operational">OPERATIONAL</span></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="panel actions-panel">
+                <div class="panel-header">QUICK ACTIONS</div>
+                <div class="panel-body">
+                    <button class="panel-button danger" onclick="window.location.href='disasters.html'">
+                        <i class="fas fa-exclamation-triangle"></i> REPORT DISASTER
+                    </button>
+                    <button class="panel-button" onclick="window.location.href='facilities.html'">
+                        <i class="fas fa-hospital"></i> FIND FACILITIES
+                    </button>
+                    <button class="panel-button" onclick="window.location.href='analytics.html'">
+                        <i class="fas fa-chart-line"></i> VIEW ANALYTICS
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <!-- Socket.IO for live tracking -->
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    
+    <script src="js/i18n.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/operations-center.js"></script>
+</body>
+</html>

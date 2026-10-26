@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AeGIS-1 - Version 2.0</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="css/modern-style.css">
+    <link rel="stylesheet" href="css/ultra-modern.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-brand">
+            <img src="assets/aegis-logo.png" alt="AeGIS-1 logo" class="brand-logo" style="width:32px;height:32px;object-fit:contain;">
+            <span>AeGIS-1 v2.0</span>
+        </div>
+        <div class="nav-menu">
+            <a href="index-v2.html" class="nav-link active"><i class="fas fa-home"></i> V2 Home</a>
+            <a href="index-operations.html" class="nav-link"><i class="fas fa-crosshairs"></i> Operations Center</a>
+            <a href="map-new.html" class="nav-link"><i class="fas fa-map-marked-alt"></i> Map</a>
+            <a href="live-tracking.html" class="nav-link"><i class="fas fa-satellite-dish"></i> Live Tracking</a>
+            <a href="mobile-tracker.html" class="nav-link"><i class="fas fa-mobile-alt"></i> Mobile Tracker</a>
+            <a href="analytics.html" class="nav-link"><i class="fas fa-chart-line"></i> Analytics</a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <section class="hero">
+            <div class="hero-content">
+                <h1>Version 2.0 Command Surface</h1>
+                <p>Operational entry point for dynamic compass, risk layers, live tracking, and reporting.</p>
+            </div>
+        </section>
+
+        <section class="section">
+            <h2 class="section-title">Primary Modules</h2>
+            <div class="quick-actions">
+                <div class="action-card ripple" onclick="window.location.href='index-operations.html'">
+                    <div class="action-icon" style="background: linear-gradient(135deg, #ff5c64 0%, #ff8a6b 100%);">
+                        <i class="fas fa-compass"></i>
+                    </div>
+                    <h3>Operations Center</h3>
+                    <p>Dynamic dual-needle compass with live operational panels.</p>
+                </div>
+
+                <div class="action-card ripple" onclick="window.location.href='map-new.html'">
+                    <div class="action-icon" style="background: linear-gradient(135deg, #4f7cff 0%, #2dd4bf 100%);">
+                        <i class="fas fa-layer-group"></i>
+                    </div>
+                    <h3>Risk Zone Map</h3>
+                    <p>Earthquake, flood, landslide, and fire zone overlays.</p>
+                </div>
+
+                <div class="action-card ripple" onclick="window.location.href='live-tracking.html'">
+                    <div class="action-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <i class="fas fa-broadcast-tower"></i>
+                    </div>
+                    <h3>Live Unit Tracking</h3>
+                    <p>Real-time map of police, ambulance, fire, and rescue units.</p>
+                </div>
+
+                <div class="action-card ripple" onclick="window.location.href='mobile-tracker.html'">
+                    <div class="action-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        <i class="fas fa-location-arrow"></i>
+                    </div>
+                    <h3>Mobile GPS Tracker</h3>
+                    <p>Field unit geolocation with reconnection and buffered updates.</p>
+                </div>
+
+                <div class="action-card ripple" onclick="window.location.href='analytics.html'">
+                    <div class="action-icon" style="background: linear-gradient(135deg, #f4b740 0%, #ffb26b 100%);">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <h3>Analytics & Reports</h3>
+                    <p>Charts and multi-page PDF response reports.</p>
+                </div>
+
+                <div class="action-card ripple" onclick="window.location.href='index-new.html'">
+                    <div class="action-icon" style="background: linear-gradient(135deg, #22c55e 0%, #2dd4bf 100%);">
+                        <i class="fas fa-columns"></i>
+                    </div>
+                    <h3>Dashboard (Modern)</h3>
+                    <p>General-purpose command dashboard and quick actions.</p>
+                </div>
+            </div>
+        </section>
+    </main>
+    <script src="js/i18n.js"></script>
+</body>
+</html>

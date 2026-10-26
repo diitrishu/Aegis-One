@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Disaster Response Dashboard</title>
+
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+
+    <!-- Leaflet Draw CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.css" />
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Sora:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
+    <!-- Professional CSS -->
+    <link rel="stylesheet" href="css/professional-style.css">
+
+    <!-- Emergency-Optimized Theme -->
+    <link rel="stylesheet" href="css/emergency-theme.css">
+
+    <!-- Premium Visual Enhancements -->
+    <link rel="stylesheet" href="css/premium-enhancements.css">
+</head>
+
+<body>
+    <div class="dashboard-container">
+        <!-- Control Panel -->
+        <aside class="control-panel">
+            <div class="control-panel-header">
+                <div class="brand">
+                    <h1>🚨 DisasterGIS Pro</h1>
+                    <p>Professional Emergency Response System</p>
+                    <div class="status-indicator">
+                        <span class="dot" id="server-status"></span>
+                        <span id="status-text">Checking...</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-panel-content">
+                <!-- Emergency Services -->
+                <div class="control-section">
+                    <h3>🏥 Emergency Services</h3>
+                    <div class="control-section-content">
+                        <div class="layer-controls">
+                            <label class="layer-toggle">
+                                <input type="checkbox" id="hospitals-toggle" data-layer="agency_hospital">
+                                <span class="toggle-slider"></span>
+                                <span class="label-text">Hospitals</span>
+                                <span class="layer-count" id="hospitals-count"></span>
+                            </label>
+
+                            <label class="layer-toggle">
+                                <input type="checkbox" id="fire-toggle" data-layer="agency_fire">
+                                <span class="toggle-slider"></span>
+                                <span class="label-text">Fire Stations</span>
+                                <span class="layer-count" id="fire-count"></span>
+                            </label>
+
+                            <label class="layer-toggle">
+                                <input type="checkbox" id="police-toggle" data-layer="agency_police">
+                                <span class="toggle-slider"></span>
+                                <span class="label-text">Police Stations</span>
+                                <span class="layer-count" id="police-count"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Infrastructure -->
+                <div class="control-section">
+                    <h3>🛣️ Infrastructure</h3>
+                    <div class="control-section-content">
+                        <div class="layer-controls">
+                            <label class="layer-toggle">
+                                <input type="checkbox" id="highways-toggle" data-layer="highways">
+                                <span class="toggle-slider"></span>
+                                <span class="label-text">Highways</span>
+                                <span class="layer-count" id="highways-count"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Disaster Scenarios -->
+                <div class="control-section">
+                    <h3>⚠️ Disaster Scenarios</h3>
+                    <div class="control-section-content">
+                        <select id="disaster-selector" class="disaster-select">
+                            <option value="">-- Select Scenario --</option>
+                            <option value="flood">🌊 Flood Risk Areas</option>
+                            <option value="fire">🔥 Fire Risk Zones</option>
+                            <option value="earthquake">🏗️ Earthquake Impact</option>
+                            <option value="landslide">⛰️ Landslide Zones</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Buffer Analysis -->
+                <div class="control-section buffer-analysis-section">
+                    <h3>🎯 Buffer Analysis</h3>
+                    <div class="control-section-content">
+                        <div class="buffer-controls">
+                            <div class="buffer-distances">
+                                <label>Buffer Distances (meters):</label>
+                                <div class="distance-inputs">
+                                    <input type="number" id="buffer-distance-1" value="1000" min="100" max="50000"
+                                        step="100">
+                                    <input type="number" id="buffer-distance-2" value="5000" min="100" max="50000"
+                                        step="100">
+                                    <input type="number" id="buffer-distance-3" value="10000" min="100" max="50000"
+                                        step="100">
+                                </div>
+                            </div>
+
+                            <div class="buffer-source">
+                                <label for="buffer-source-layer">Source Layer:</label>
+                                <select id="buffer-source-layer">
+                                    <option value="">Select layer...</option>
+                                    <option value="agency_hospital">🏥 Hospitals</option>
+                                    <option value="agency_fire">🚒 Fire Stations</option>
+                                    <option value="agency_police">🚔 Police Stations</option>
+                                </select>
+                            </div>
+
+                            <div class="buffer-actions">
+                                <button id="create-buffers" class="btn btn-primary" disabled>
+                                    Create Buffers
+                                </button>
+                                <button id="clear-buffers" class="btn btn-secondary" disabled>
+                                    Clear Buffers
+                                </button>
+                            </div>
+
+                            <div class="buffer-options">
+                                <div class="option-group">
+                                    <label>
+                                        <input type="checkbox" id="show-combined-coverage" checked>
+                                        Show Combined Coverage
+                                    </label>
+                                </div>
+                                <div class="option-group">
+                                    <label>
+                                        <input type="checkbox" id="discover-facilities" checked>
+                                        Discover Facilities
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="buffer-results" id="buffer-results" style="display: none;">
+                                <h4>Analysis Results</h4>
+                                <div id="buffer-statistics"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Route Optimization -->
+                <div class="control-section route-optimization-section">
+                    <h3>🗺️ Route Optimization</h3>
+                    <div class="control-section-content">
+                        <div class="route-instructions">
+                            <p><strong>📍 How to use:</strong></p>
+                            <p>1. Click "📍 Set Start" button, then click map</p>
+                            <p>2. Click "🎯 Set End" button, then click map</p>
+                            <p>3. Click "Calculate Route" to see the path</p>
+                        </div>
+
+                        <div class="route-controls">
+                            <div class="route-mode">
+                                <label>Route Mode:</label>
+                                <select id="route-mode">
+                                    <option value="point-to-point">Point to Point</option>
+                                    <option value="emergency-response">Emergency Response</option>
+                                </select>
+                            </div>
+
+                            <div class="route-points" id="point-to-point-controls">
+                                <div class="route-point">
+                                    <label>Start Point:</label>
+                                    <div class="point-input">
+                                        <input type="text" id="start-point" placeholder="Click map to set" readonly>
+                                        <button id="set-start-point" class="point-btn btn btn-secondary">📍 Set
+                                            Start</button>
+                                    </div>
+                                </div>
+                                <div class="route-point">
+                                    <label>End Point:</label>
+                                    <div class="point-input">
+                                        <input type="text" id="end-point" placeholder="Click map to set" readonly>
+                                        <button id="set-end-point" class="point-btn btn btn-secondary">🎯 Set
+                                            End</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="emergency-controls" id="emergency-response-controls" style="display: none;">
+                                <div class="incident-location">
+                                    <label>Incident Location:</label>
+                                    <div class="point-input">
+                                        <input type="text" id="incident-location"
+                                            placeholder="Click map to set incident" readonly>
+                                        <button id="set-incident-location" class="point-btn btn btn-warning">🚨 Set
+                                            Incident</button>
+                                    </div>
+                                </div>
+                                <div class="facility-type">
+                                    <label>Response Type:</label>
+                                    <select id="emergency-facility-type">
+                                        <option value="hospital">🏥 Medical Emergency</option>
+                                        <option value="fire_station">🚒 Fire Emergency</option>
+                                        <option value="police_station">🚔 Police Emergency</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="route-actions">
+                                <button id="calculate-route" class="btn btn-primary" disabled>
+                                    Calculate Route
+                                </button>
+                                <button id="clear-routes" class="btn btn-secondary" disabled>
+                                    Clear Routes
+                                </button>
+                            </div>
+
+                            <div class="route-results" id="route-results" style="display: none;">
+                                <h4>Route Analysis</h4>
+                                <div id="route-statistics"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Drawing Tools -->
+                <div class="control-section" id="drawing-panel">
+                    <h3>✏️ Draw Disaster Areas</h3>
+                    <div class="control-section-content">
+                        <button id="toggle-drawing" class="drawing-toggle btn btn-primary">✏️ Draw Disaster
+                            Area</button>
+                        <div id="disaster-buffer-results" class="disaster-buffer-results"></div>
+                    </div>
+                </div>
+
+                <!-- Export & Actions -->
+                <div class="control-section">
+                    <h3>🔧 Actions</h3>
+                    <div class="control-section-content">
+                        <button id="export-png" class="btn btn-secondary mb-2">📸 Export PNG</button>
+                        <button id="export-pdf" class="btn btn-primary mb-2">📄 Generate PDF</button>
+                        <button id="clear-all" class="action-btn danger">Clear All Layers</button>
+                        <button id="refresh-server" class="action-btn primary">Refresh Server</button>
+                    </div>
+                </div>
+
+                <!-- Performance Monitor -->
+                <div class="control-section">
+                    <h3>📊 Performance</h3>
+                    <div class="control-section-content">
+                        <div class="performance-stats">
+                            <div class="stat">
+                                <span class="stat-label">Active Layers:</span>
+                                <span class="stat-value" id="active-layers">0</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">WMS Requests:</span>
+                                <span class="stat-value" id="wms-requests">0</span>
+                            </div>
+                            <div class="stat">
+                                <span class="stat-label">Load Time:</span>
+                                <span class="stat-value" id="load-time">0ms</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Map Container -->
+        <main class="map-container">
+            <div id="map" class="map"></div>
+
+            <!-- Loading Indicator -->
+            <div id="loading-indicator" class="loading-indicator">
+                <div class="spinner"></div>
+                <span>Loading layer...</span>
+            </div>
+
+            <!-- Layer Info Panel -->
+            <div id="layer-info" class="layer-info">
+                <h4>Layer Information</h4>
+                <div id="layer-details"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Disaster Form Modal -->
+    <div id="disaster-form-panel" class="disaster-form-panel">
+        <div class="form-container">
+            <h3>📝 Disaster Area Details</h3>
+            <form id="disaster-form">
+                <div class="form-group">
+                    <label for="disaster-type">Disaster Type *</label>
+                    <select id="disaster-type" name="disaster_type" required>
+                        <option value="">-- Select Type --</option>
+                        <option value="Flood">🌊 Flood</option>
+                        <option value="Fire">🔥 Fire</option>
+                        <option value="Landslide">🏔️ Landslide</option>
+                        <option value="Earthquake">🏗️ Earthquake</option>
+                        <option value="Cyclone">🌀 Cyclone</option>
+                        <option value="Drought">🌵 Drought</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="severity">Severity Level *</label>
+                    <select id="severity" name="severity" required>
+                        <option value="">-- Select Severity --</option>
+                        <option value="Low">🟢 Low</option>
+                        <option value="Medium">🟡 Medium</option>
+                        <option value="High">🟠 High</option>
+                        <option value="Critical">🔴 Critical</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Description</label>
+                    <textarea id="description" name="description" rows="3"
+                        placeholder="Additional details about the disaster area..."></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">💾 Save Disaster Area</button>
+                    <button type="button" id="cancel-drawing" class="btn btn-secondary">❌ Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+
+    <!-- Leaflet Draw JS -->
+    <script src="https://unpkg.com/leaflet-draw@1.0.4/dist/leaflet.draw.js"></script>
+
+    <!-- Spatial Analysis Dependencies -->
+    <script src="https://unpkg.com/@turf/turf@6.5.0/turf.min.js"></script>
+    <script src="https://unpkg.com/proj4@2.9.0/dist/proj4.js"></script>
+    <script src="https://unpkg.com/leaflet.heat@0.2.0/dist/leaflet-heat.js"></script>
+    <script src="https://unpkg.com/tokml@0.4.0/tokml.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <!-- MGRS with fallback -->
+    <script>
+        window.mgrs = window.mgrs || {
+            forward: function (coords) { return 'MGRS not available'; },
+            inverse: function (mgrsString) { return [0, 0]; },
+            toPoint: function (mgrsString) { return [0, 0]; }
+        };
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/mgrs@1.0.0/mgrs.min.js"
+        onerror="console.warn('MGRS library failed to load - using fallback')"></script>
+
+    <!-- Toast Notification System -->
+    <script src="js/toast-notifications.js"></script>
+
+    <!-- Dynamic App Logic -->
+    <script src="js/dynamic-config.js"></script>
+    <script src="js/data-layer-manager.js"></script>
+    <script src="js/data-layer-ui.js"></script>
+    <script src="js/spatial-analysis-engine.js"></script>
+    <script src="js/buffer-visualization.js"></script>
+    <script src="js/route-optimization-engine.js"></script>
+    <script src="js/route-visualization.js"></script>
+    <script src="js/dynamic-layers.js"></script>
+    <script src="js/disaster-drawing.js"></script>
+    <script src="js/measurement-tools.js"></script>
+    <script src="js/coordinate-tools.js"></script>
+    <script src="js/strategic-analysis.js"></script>
+    <script src="js/offline-cache.js"></script>
+    <script src="js/realtime-data.js"></script>
+    <script src="js/reporting.js"></script>
+    <script src="js/dynamic-ui.js"></script>
+    <script src="js/dynamic-app.js"></script>
+    <script src="js/i18n.js"></script>
+</body>
+
+</html>

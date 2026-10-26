@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="refresh" content="0; url=index-new.html">
+    <title>🚨 AeGIS-1</title>
+    <script>
+        // Redirect to new modern interface
+        window.location.href = 'index-new.html';
+    </script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-red: #dc3545;
+            --primary-blue: #007bff;
+            --success-green: #28a745;
+            --warning-orange: #fd7e14;
+        }
+
+        body {
+            background: linear-gradient(135deg, #f6f7fb 0%, #ffffff 100%);
+            min-height: 100vh;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .main-header {
+            background: linear-gradient(135deg, var(--primary-red), #c82333);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+        }
+
+        .main-header h1 {
+            font-size: 2.5rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 0.5rem;
+        }
+        
+        .main-header .nav-buttons {
+            margin-top: 1rem;
+        }
+        
+        .main-header .nav-buttons a {
+            margin: 0 0.5rem;
+            padding: 0.5rem 1.5rem;
+            background: rgba(255,255,255,0.2);
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+        
+        .main-header .nav-buttons a:hover {
+            background: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+        }
+
+        .main-header p {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            margin: 0;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border: none;
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            margin-bottom: 2rem;
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, var(--primary-blue), #0056b3);
+            color: white;
+            border-radius: 15px 15px 0 0 !important;
+            padding: 1.5rem;
+            border: none;
+        }
+
+        .card-header h3 {
+            margin: 0;
+            font-weight: 600;
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary-blue), #0056b3);
+            color: white;
+            padding: 2rem;
+            border-radius: 12px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0,123,255,0.4);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .btn-emergency {
+            background: linear-gradient(135deg, var(--primary-red), #c82333);
+            border: none;
+            color: white;
+            padding: 1rem 2rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-emergency:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(220,53,69,0.4);
+            color: white;
+        }
+
+        .btn-refresh {
+            background: linear-gradient(135deg, var(--success-green), #1e7e34);
+            border: none;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-refresh:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(40,167,69,0.4);
+            color: white;
+        }
+
+        .coordinate-card {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 1rem;
+        }
+
+        .coordinate-card:hover {
+            background: #e3f2fd;
+            border-color: var(--primary-blue);
+            transform: translateX(5px);
+        }
+
+        .coordinate-card.selected {
+            background: #e3f2fd;
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 3px rgba(0,123,255,0.1);
+        }
+
+        .city-name {
+            font-weight: bold;
+            color: var(--primary-blue);
+            font-size: 1.1rem;
+        }
+
+        .coordinates {
+            font-family: 'Courier New', monospace;
+            color: #666;
+            margin-top: 0.25rem;
+        }
+
+        .loading-spinner {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid var(--primary-blue);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .alert-custom {
+            border-radius: 8px;
+            border: none;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .facility-item {
+            background: #f8f9fa;
+            border-left: 4px solid var(--primary-blue);
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .facility-name {
+            font-weight: bold;
+            color: var(--primary-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .facility-details {
+            font-size: 0.9rem;
+            color: #666;
+        }
+
+        .system-status-indicator {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            margin-right: 8px;
+        }
+
+        .status-operational {
+            background-color: var(--success-green);
+            box-shadow: 0 0 10px rgba(40,167,69,0.5);
+        }
+
+        .status-error {
+            background-color: var(--primary-red);
+            box-shadow: 0 0 10px rgba(220,53,69,0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="main-header">
+        <h1><i class="fas fa-exclamation-triangle"></i> AEGIS-1</h1>
+        <p>Real-time Emergency Response for North India | Lives Depend on This System</p>
+        <div class="nav-buttons">
+            <a href="index.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a>
+            <a href="map_v2.html"><i class="fas fa-map-marked-alt"></i> Interactive Map V2</a>
+        </div>
+    </div>
+
+    <div class="container-fluid">
+        <div class="row">
+            <!-- System Status Panel -->
+            <div class="col-lg-4">
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-heartbeat"></i> System Status</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="system-status">
+                            <div class="text-center p-4">
+                                <div class="loading-spinner"></div>
+                                <p class="mt-2">Loading system status...</p>
+                            </div>
+                        </div>
+                        <button class="btn btn-refresh w-100" onclick="loadSystemStatus()">
+                            <i class="fas fa-sync-alt"></i> Refresh Status
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Quick Coordinates -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-map-marker-alt"></i> Quick Test Coordinates</h3>
+                    </div>
+                    <div class="card-body">
+                        <p class="mb-3">Click to auto-fill coordinates:</p>
+                        <div class="coordinate-card" onclick="setCoordinates(26.8467, 80.9462, 'Lucknow')">
+                            <div class="city-name"><i class="fas fa-city"></i> Lucknow</div>
+                            <div class="coordinates">26.8467, 80.9462</div>
+                        </div>
+                        <div class="coordinate-card" onclick="setCoordinates(28.6139, 77.2090, 'Delhi')">
+                            <div class="city-name"><i class="fas fa-landmark"></i> Delhi</div>
+                            <div class="coordinates">28.6139, 77.2090</div>
+                        </div>
+                        <div class="coordinate-card" onclick="setCoordinates(26.4499, 80.3319, 'Kanpur')">
+                            <div class="city-name"><i class="fas fa-industry"></i> Kanpur</div>
+                            <div class="coordinates">26.4499, 80.3319</div>
+                        </div>
+                        <div class="coordinate-card" onclick="setCoordinates(27.1767, 78.0081, 'Agra')">
+                            <div class="city-name"><i class="fas fa-mosque"></i> Agra</div>
+                            <div class="coordinates">27.1767, 78.0081</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-lg-8">
+                <!-- Create Disaster Event -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-plus-circle"></i> Report New Disaster Event</h3>
+                    </div>
+                    <div class="card-body">
+                        <form id="disaster-form">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Disaster Type</label>
+                                        <select class="form-select" id="disaster-type" required>
+                                            <option value="">Select disaster type</option>
+                                            <option value="flood">🌊 Flood</option>
+                                            <option value="earthquake">🏗️ Earthquake</option>
+                                            <option value="fire">🔥 Fire</option>
+                                            <option value="landslide">🏔️ Landslide</option>
+                                            <option value="cyclone">🌪️ Cyclone</option>
+                                            <option value="other">⚠️ Other</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Severity Level</label>
+                                        <select class="form-select" id="severity">
+                                            <option value="low">🟢 Low</option>
+                                            <option value="medium" selected>🟡 Medium</option>
+                                            <option value="high">🔴 High</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Latitude</label>
+                                        <input type="number" class="form-control" id="latitude" step="0.0001" placeholder="26.8467" required>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Longitude</label>
+                                        <input type="number" class="form-control" id="longitude" step="0.0001" placeholder="80.9462" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="mb-3">
+                                        <label class="form-label">Affected Radius (km)</label>
+                                        <input type="number" class="form-control" id="radius" value="5" min="1" max="50">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Description</label>
+                                <textarea class="form-control" id="description" rows="4" placeholder="Describe the disaster situation in detail..." required></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-emergency w-100">
+                                <i class="fas fa-exclamation-triangle"></i> ACTIVATE EMERGENCY RESPONSE PROTOCOL
+                            </button>
+                        </form>
+                        <div id="disaster-result"></div>
+                    </div>
+                </div>
+
+                <!-- Emergency Facilities -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-hospital"></i> Emergency Facilities</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="row mb-3">
+                            <div class="col-md-8">
+                                <p class="mb-0">Find emergency facilities near disaster location:</p>
+                            </div>
+                            <div class="col-md-4">
+                                <button class="btn btn-refresh w-100" onclick="findNearbyFacilities()">
+                                    <i class="fas fa-search"></i> Find Facilities
+                                </button>
+                            </div>
+                        </div>
+                        <div id="facilities-result">
+                            <div class="text-muted text-center p-4">
+                                <i class="fas fa-info-circle"></i> Enter coordinates and click "Find Facilities" to locate nearby emergency services
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="app.js"></script>
+    <script src="js/i18n.js"></script>
+</body>
+</html>

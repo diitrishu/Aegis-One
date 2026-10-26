@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎨 Animation Showcase - Ultra Modern Design</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/modern-style.css">
+    <link rel="stylesheet" href="css/ultra-modern.css">
+    
+    <style>
+        .showcase-section {
+            margin-bottom: 3rem;
+        }
+        
+        .showcase-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .showcase-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .demo-card {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .demo-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1rem;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            color: white;
+        }
+        
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 1rem;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.875rem;
+            overflow-x: auto;
+            margin-top: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <i class="fas fa-palette"></i>
+            <span>Animation Showcase</span>
+        </div>
+        <div class="nav-menu">
+            <a href="index-new.html" class="nav-link">
+                <i class="fas fa-home"></i> Back to Dashboard
+            </a>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <!-- Hero -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>🎨 Ultra Modern Animation Showcase</h1>
+                <p>Explore all the beautiful animations and effects in your new design</p>
+            </div>
+        </section>
+
+        <!-- Glass Morphism -->
+        <section class="showcase-section">
+            <h2 class="showcase-title">
+                <i class="fas fa-glass-whiskey"></i>
+                Glass Morphism Effects
+            </h2>
+            <div class="showcase-grid">
+                <div class="demo-card glass-card">
+                    <div class="demo-icon" style="background: var(--primary-gradient);">
+                        <i class="fas fa-sparkles"></i>
+                    </div>
+                    <h3>Frosted Glass</h3>
+                    <p>Translucent background with backdrop blur</p>
+                </div>
+                <div class="demo-card glass-card">
+                    <div class="demo-icon" style="background: var(--danger-gradient);">
+                        <i class="fas fa-fire"></i>
+                    </div>
+                    <h3>Blur Effect</h3>
+                    <p>Modern iOS-inspired aesthetic</p>
+                </div>
+                <div class="demo-card glass-card">
+                    <div class="demo-icon" style="background: var(--success-gradient);">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3>Semi-Transparent</h3>
+                    <p>Elegant and professional</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Hover Effects -->
+        <section class="showcase-section">
+            <h2 class="showcase-title">
+                <i class="fas fa-hand-pointer"></i>
+                Hover Effects (Try hovering!)
+            </h2>
+            <div class="showcase-grid">
+                <div class="action-card ripple">
+                    <div class="action-icon" style="background: var(--primary-gradient);">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                    <h3>Lift & Scale</h3>
+                    <p>Card lifts 15px and scales to 1.03x</p>
+                </div>
+                <div class="action-card ripple">
+                    <div class="action-icon" style="background: var(--danger-gradient);">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <h3>Icon Rotation</h3>
+                    <p>Icon rotates 360° and scales</p>
+                </div>
+                <div class="action-card ripple">
+                    <div class="action-icon" style="background: var(--success-gradient);">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3>Shimmer Effect</h3>
+                    <p>Light sweeps across the card</p>
+                </div>
+                <div class="action-card ripple">
+                    <div class="action-icon" style="background: var(--warning-gradient);">
+                        <i class="fas fa-bolt"></i>
+                    </div>
+                    <h3>Ripple Click</h3>
+                    <p>Click to see ripple effect!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gradient Buttons -->
+        <section class="showcase-section">
+            <h2 class="showcase-title">
+                <i class="fas fa-paint-brush"></i>
+                Gradient Buttons
+            </h2>
+            <div class="showcase-grid">
+                <div class="demo-card">
+                    <button class="btn-primary" style="background: var(--primary-gradient);">
+                        <i class="fas fa-magic"></i> Primary Button
+                    </button>
+                    <div class="code-block">var(--primary-gradient)</div>
+                </div>
+                <div class="demo-card">
+                    <button class="btn-primary" style="background: var(--danger-gradient);">
+                        <i class="fas fa-exclamation-triangle"></i> Danger Button
+                    </button>
+                    <div class="code-block">var(--danger-gradient)</div>
+                </div>
+                <div class="demo-card">
+                    <button class="btn-primary" style="background: var(--success-gradient);">
+                        <i class="fas fa-check"></i> Success Button
+                    </button>
+                    <div class="code-block">var(--success-gradient)</div>
+                </div>
+                <div class="demo-card">
+                    <button class="btn-primary" style="background: var(--info-gradient);">
+                        <i class="fas fa-info-circle"></i> Info Button
+                    </button>
+                    <div class="code-block">var(--info-gradient)</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Hero Stats -->
+        <section class="showcase-section">
+            <h2 class="showcase-title">
+                <i class="fas fa-chart-line"></i>
+                Animated Stats Cards
+            </h2>
+            <div class="hero-stats">
+                <div class="hero-stat glow-on-hover">
+                    <div class="stat-icon" style="background: var(--primary-gradient);">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value">1,234</div>
+                        <div class="stat-label">Active Users</div>
+                    </div>
+                </div>
+                <div class="hero-stat glow-on-hover">
+                    <div class="stat-icon" style="background: var(--danger-gradient);">
+                        <i class="fas fa-fire"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value">56</div>
+                        <div class="stat-label">Active Alerts</div>
+                    </div>
+                </div>
+                <div class="hero-stat glow-on-hover">
+                    <div class="stat-icon" style="background: var(--success-gradient);">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value">98%</div>
+                        <div class="stat-label">Success Rate</div>
+                    </div>
+                </div>
+                <div class="hero-stat glow-on-hover">
+                    <div class="stat-icon" style="background: var(--info-gradient);">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-info">
+                        <div class="stat-value">24/7</div>
+                        <div class="stat-label">Monitoring</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Location Cards -->
+        <section class="showcase-section">
+            <h2 class="showcase-title">
+                <i class="fas fa-map-marker-alt"></i>
+                Location Cards with Animations
+            </h2>
+            <div class="location-grid">
+                <div class="location-card ripple">
+                    <div class="location-icon">
+                        <i class="fas fa-city"></i>
+                    </div>
+                    <h4>🏛️ City Center</h4>
+                    <p class="location-coords">28.6139, 77.2090</p>
+                    <span class="location-badge">Metropolitan</span>
+                </div>
+                <div class="location-card ripple">
+                    <div class="location-icon">
+                        <i class="fas fa-mountain"></i>
+                    </div>
+                    <h4>⛰️ Mountain Region</h4>
+                    <p class="location-coords">30.0668, 79.0193</p>
+                    <span class="location-badge">High Altitude</span>
+                </div>
+                <div class="location-card ripple">
+                    <div class="location-icon">
+                        <i class="fas fa-water"></i>
+                    </div>
+                    <h4>🌊 Coastal Area</h4>
+                    <p class="location-coords">19.0760, 72.8777</p>
+                    <span class="location-badge">Flood Zone</span>
+                </div>
+                <div class="location-card ripple">
+                    <div class="location-icon">
+                        <i class="fas fa-tree"></i>
+                    </div>
+                    <h4>🌳 Forest Region</h4>
+                    <p class="location-coords">26.8467, 80.9462</p>
+                    <span class="location-badge">Fire Risk</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Animation Classes -->
+        <section class="showcase-section">
+            <h2 class="showcase-title">
+                <i class="fas fa-code"></i>
+                Available Animation Classes
+            </h2>
+            <div class="card">
+                <div class="card-body">
+                    <div class="info-list">
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="fas fa-circle-notch"></i> .ripple
+                            </div>
+                            <div class="info-value">Click ripple effect</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="fas fa-sun"></i> .glow-on-hover
+                            </div>
+                            <div class="info-value">Glow effect on hover</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="fas fa-glass-whiskey"></i> .glass-card
+                            </div>
+                            <div class="info-value">Glass morphism effect</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="fas fa-arrow-up"></i> .fade-in-up
+                            </div>
+                            <div class="info-value">Fade and slide up</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="fas fa-expand"></i> .scale-in
+                            </div>
+                            <div class="info-value">Scale in animation</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="fas fa-arrow-right"></i> .slide-in-right
+                            </div>
+                            <div class="info-value">Slide from right</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Performance Info -->
+        <section class="showcase-section">
+            <h2 class="showcase-title">
+                <i class="fas fa-tachometer-alt"></i>
+                Performance Metrics
+            </h2>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-rocket"></i> Speed</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-list">
+                            <div class="info-item">
+                                <div class="info-label">CSS File Size</div>
+                                <div class="info-value">13KB</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Gzipped Size</div>
+                                <div class="info-value">3KB</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Load Time</div>
+                                <div class="info-value">&lt; 100ms</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Animation FPS</div>
+                                <div class="info-value">60fps</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-check-circle"></i> Features</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-list">
+                            <div class="info-item">
+                                <div class="info-label">Total Animations</div>
+                                <div class="info-value">20+</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Gradient Palettes</div>
+                                <div class="info-value">5</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">Glass Effects</div>
+                                <div class="info-value">Yes</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">JavaScript Required</div>
+                                <div class="info-value">No</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Back to Dashboard -->
+        <section class="section" style="text-align: center;">
+            <button class="btn-primary" onclick="window.location.href='index-new.html'" style="font-size: 1.125rem; padding: 1rem 2rem;">
+                <i class="fas fa-arrow-left"></i> Back to Dashboard
+            </button>
+        </section>
+    </main>
+
+    <script>
+        // Add some interactivity
+        document.querySelectorAll('.ripple').forEach(element => {
+            element.addEventListener('click', function(e) {
+                console.log('Ripple effect triggered!');
+            });
+        });
+    </script>
+    <script src="js/i18n.js"></script>
+</body>
+</html>

@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics - AeGIS-1</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    
+    <link rel="stylesheet" href="css/modern-style.css">
+    <link rel="stylesheet" href="css/ultra-modern.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <img src="assets/aegis-logo.png" alt="AeGIS-1 logo" class="brand-logo" style="width:32px;height:32px;object-fit:contain;">
+            <span>AeGIS-1</span>
+        </div>
+        <div class="nav-menu">
+            <a href="index-new.html" class="nav-link">
+                <i class="fas fa-home"></i> Dashboard
+            </a>
+            <a href="map-new.html" class="nav-link">
+                <i class="fas fa-map-marked-alt"></i> Map
+            </a>
+            <a href="disasters.html" class="nav-link">
+                <i class="fas fa-exclamation-triangle"></i> Disasters
+            </a>
+            <a href="facilities.html" class="nav-link">
+                <i class="fas fa-hospital"></i> Facilities
+            </a>
+            <a href="analytics.html" class="nav-link active">
+                <i class="fas fa-chart-line"></i> Analytics
+            </a>
+            <a href="about.html" class="nav-link">
+                <i class="fas fa-info-circle"></i> About
+            </a>
+        </div>
+        <div class="nav-actions">
+            <button class="btn-icon" onclick="toggleTheme()">
+                <i class="fas fa-moon"></i>
+            </button>
+            <button class="btn-primary" onclick="window.location.href='disasters.html'">
+                <i class="fas fa-plus"></i> Report Disaster
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div>
+                <h1><i class="fas fa-chart-line"></i> System Analytics</h1>
+                <p>Disaster patterns and response metrics</p>
+            </div>
+            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                <button class="btn-secondary" onclick="loadAnalytics()">
+                    <i class="fas fa-sync-alt"></i> Refresh Data
+                </button>
+                <button class="btn-primary" onclick="reportGenerator.showDisasterSelection()">
+                    <i class="fas fa-file-pdf"></i> Generate Report
+                </button>
+            </div>
+        </div>
+
+        <!-- Stats Overview -->
+        <div class="section">
+            <div class="grid-3">
+                <div class="card">
+                    <div class="card-body" style="text-align: center;">
+                        <div style="font-size: 3rem; margin-bottom: 0.5rem;">
+                            <i class="fas fa-exclamation-triangle" style="color: var(--danger);"></i>
+                        </div>
+                        <div class="stat-value" id="total-disasters">0</div>
+                        <div class="stat-label">Total Disasters</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body" style="text-align: center;">
+                        <div style="font-size: 3rem; margin-bottom: 0.5rem;">
+                            <i class="fas fa-hospital" style="color: var(--info);"></i>
+                        </div>
+                        <div class="stat-value" id="total-facilities">0</div>
+                        <div class="stat-label">Emergency Facilities</div>
+                    </div>
+                </div>
+                <div class="card">
+                    <div class="card-body" style="text-align: center;">
+                        <div style="font-size: 3rem; margin-bottom: 0.5rem;">
+                            <i class="fas fa-map-marked" style="color: var(--success);"></i>
+                        </div>
+                        <div class="stat-value" id="districts-covered">0</div>
+                        <div class="stat-label">Districts Covered</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="section">
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-chart-pie"></i> Facility Distribution</h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="facilityChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-chart-bar"></i> Disaster Types</h3>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="disasterChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coverage Map -->
+        <div class="section">
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-map"></i> Coverage Overview</h3>
+                </div>
+                <div class="card-body">
+                    <div class="info-list">
+                        <div class="info-item">
+                            <span class="info-label">
+                                <i class="fas fa-hospital"></i> Hospitals
+                            </span>
+                            <span class="info-value" id="hospitals-count">0</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">
+                                <i class="fas fa-fire-extinguisher"></i> Fire Stations
+                            </span>
+                            <span class="info-value" id="fire-stations-count">0</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">
+                                <i class="fas fa-shield-alt"></i> Police Stations
+                            </span>
+                            <span class="info-value" id="police-stations-count">0</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">
+                                <i class="fas fa-check-circle"></i> Operational Facilities
+                            </span>
+                            <span class="info-value" id="operational-facilities">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Live Incident Intelligence -->
+        <div class="section">
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-satellite-dish"></i> Live Incident Intelligence</h3>
+                </div>
+                <div class="card-body">
+                    <div class="info-list">
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-crosshairs"></i> Analysis Location</span>
+                            <span class="info-value" id="intelligence-location">Loading...</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-clock"></i> Last Refreshed</span>
+                            <span class="info-value" id="intelligence-updated">Loading...</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-users"></i> Population in Radius</span>
+                            <span class="info-value" id="pop-live">0</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-bullseye"></i> Population Accuracy</span>
+                            <span class="info-value" id="pop-accuracy-live">N/A</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-house-damage"></i> Seismic Risk</span>
+                            <span class="info-value" id="seismic-live">UNKNOWN</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-wave-square"></i> Nearby Earthquakes</span>
+                            <span class="info-value" id="seismic-count-live">0</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-mountain"></i> Elevation</span>
+                            <span class="info-value" id="elevation-live">N/A</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-water"></i> Flood-Risk Zones</span>
+                            <span class="info-value" id="flood-zones-live">0</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label"><i class="fas fa-exclamation-triangle"></i> High Flood-Risk</span>
+                            <span class="info-value" id="flood-high-live">0</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- System Performance -->
+        <div class="section">
+            <h2 class="section-title">System Performance</h2>
+            <div class="grid-3">
+                <div class="card">
+                    <div class="card-body">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                            <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--success), #43e97b); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
+                                <i class="fas fa-check"></i>
+                            </div>
+                            <div>
+                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--text-primary);">99.9%</div>
+                                <div style="color: var(--text-secondary); font-size: 0.875rem;">Uptime</div>
+                            </div>
+                        </div>
+                        <p style="color: var(--text-secondary); font-size: 0.875rem; margin: 0;">
+                            System availability over the last 30 days
+                        </p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                            <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--info), #2dd4bf); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div>
+                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--text-primary);">&lt;2s</div>
+                                <div style="color: var(--text-secondary); font-size: 0.875rem;">Response Time</div>
+                            </div>
+                        </div>
+                        <p style="color: var(--text-secondary); font-size: 0.875rem; margin: 0;">
+                            Average API response time
+                        </p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body">
+                        <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                            <div style="width: 60px; height: 60px; border-radius: 50%; background: linear-gradient(135deg, var(--danger), #ff8a6b); display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem;">
+                                <i class="fas fa-bolt"></i>
+                            </div>
+                            <div>
+                                <div style="font-size: 1.5rem; font-weight: 700; color: var(--text-primary);">24/7</div>
+                                <div style="color: var(--text-secondary); font-size: 0.875rem;">Monitoring</div>
+                            </div>
+                        </div>
+                        <p style="color: var(--text-secondary); font-size: 0.875rem; margin: 0;">
+                            Continuous system monitoring
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script src="js/i18n.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/modern-analytics.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.2/jspdf.plugin.autotable.min.js"></script>
+    <script src="js/disaster-report-generator.js"></script>
+</body>
+</html>

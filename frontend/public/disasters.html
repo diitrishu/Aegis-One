@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Disaster Management - AeGIS-1</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <link rel="stylesheet" href="css/modern-style.css">
+    <link rel="stylesheet" href="css/ultra-modern.css">
+    
+    <style>
+        #location-map {
+            height: 400px;
+            width: 100%;
+            border-radius: var(--radius-md);
+            margin-top: 1rem;
+        }
+        
+        .map-toggle-btn {
+            width: 100%;
+            margin-bottom: 1rem;
+        }
+        
+        .map-container-wrapper {
+            display: none;
+            margin-bottom: 1.5rem;
+        }
+        
+        .map-container-wrapper.show {
+            display: block;
+        }
+        
+        .map-instructions {
+            background: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: var(--radius-sm);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+        
+        .map-instructions i {
+            font-size: 1.5rem;
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <img src="assets/aegis-logo.png" alt="AeGIS-1 logo" class="brand-logo" style="width:32px;height:32px;object-fit:contain;">
+            <span>AeGIS-1</span>
+        </div>
+        <div class="nav-menu">
+            <a href="index-new.html" class="nav-link">
+                <i class="fas fa-home"></i> Dashboard
+            </a>
+            <a href="map-new.html" class="nav-link">
+                <i class="fas fa-map-marked-alt"></i> Map
+            </a>
+            <a href="disasters.html" class="nav-link active">
+                <i class="fas fa-exclamation-triangle"></i> Disasters
+            </a>
+            <a href="facilities.html" class="nav-link">
+                <i class="fas fa-hospital"></i> Facilities
+            </a>
+            <a href="analytics.html" class="nav-link">
+                <i class="fas fa-chart-line"></i> Analytics
+            </a>
+            <a href="about.html" class="nav-link">
+                <i class="fas fa-info-circle"></i> About
+            </a>
+        </div>
+        <div class="nav-actions">
+            <button class="btn-icon" onclick="toggleTheme()">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <div>
+                <h1><i class="fas fa-exclamation-triangle"></i> Disaster Management</h1>
+                <p>Report and manage disaster events</p>
+            </div>
+        </div>
+
+        <div class="grid-2">
+            <!-- Create Disaster Form -->
+            <div class="card">
+                <div class="card-header">
+                    <h3><i class="fas fa-plus-circle"></i> Report New Disaster</h3>
+                </div>
+                <div class="card-body">
+                    <form id="disaster-form">
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-fire"></i> Disaster Type
+                            </label>
+                            <select class="form-select" id="disaster-type" required>
+                                <option value="">Select disaster type</option>
+                                <option value="flood">🌊 Flood</option>
+                                <option value="earthquake">🏗️ Earthquake</option>
+                                <option value="fire">🔥 Fire</option>
+                                <option value="landslide">🏔️ Landslide</option>
+                                <option value="cyclone">🌪️ Cyclone</option>
+                                <option value="drought">🌞 Drought</option>
+                                <option value="industrial_accident">🏭 Industrial Accident</option>
+                                <option value="other">⚠️ Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-exclamation-circle"></i> Severity Level
+                            </label>
+                            <select class="form-select" id="severity">
+                                <option value="low">🟢 Low - Minor impact</option>
+                                <option value="medium" selected>🟡 Medium - Moderate impact</option>
+                                <option value="high">🔴 High - Severe impact</option>
+                                <option value="critical">🚨 Critical - Life threatening</option>
+                            </select>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-map-marker-alt"></i> Latitude
+                                </label>
+                                <input type="number" class="form-input" id="latitude" 
+                                       step="0.0001" placeholder="26.8467" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">
+                                    <i class="fas fa-map-marker-alt"></i> Longitude
+                                </label>
+                                <input type="number" class="form-input" id="longitude" 
+                                       step="0.0001" placeholder="80.9462" required>
+                            </div>
+                        </div>
+
+                        <!-- Map Location Picker -->
+                        <div class="form-group">
+                            <div style="display: flex; gap: 0.75rem;">
+                                <button type="button" class="btn-secondary" style="flex: 1;" onclick="toggleMapPicker()">
+                                    <i class="fas fa-map"></i> <span id="map-toggle-text">Select Location on Map</span>
+                                </button>
+                                <button type="button" class="btn-secondary" onclick="useMyLocation()">
+                                    <i class="fas fa-location-arrow"></i> Use My Location
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="map-container-wrapper" class="map-container-wrapper">
+                            <div class="map-instructions">
+                                <i class="fas fa-info-circle"></i>
+                                <div>
+                                    <strong>Click on the map to select disaster location</strong>
+                                    <p style="margin: 0; font-size: 0.875rem; color: var(--text-secondary);">
+                                        The coordinates will be automatically filled in the form above
+                                    </p>
+                                </div>
+                            </div>
+                            <div id="location-map"></div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-circle"></i> Affected Radius (km)
+                            </label>
+                            <input type="number" class="form-input" id="radius" 
+                                   value="5" min="1" max="50">
+                            <small class="form-help">Area affected by the disaster</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">
+                                <i class="fas fa-align-left"></i> Description
+                            </label>
+                            <textarea class="form-textarea" id="description" 
+                                      placeholder="Describe the disaster situation in detail..." required></textarea>
+                        </div>
+
+                        <button type="submit" class="btn-danger" style="width: 100%;">
+                            <i class="fas fa-exclamation-triangle"></i> 
+                            ACTIVATE EMERGENCY RESPONSE
+                        </button>
+                    </form>
+
+                    <div id="disaster-result" style="margin-top: 1.5rem;"></div>
+                </div>
+            </div>
+
+            <!-- Quick Locations & Info -->
+            <div>
+                <!-- Quick Test Locations -->
+                <div class="card" style="margin-bottom: 1.5rem;">
+                    <div class="card-header">
+                        <h3><i class="fas fa-map-pin"></i> Quick Test Locations</h3>
+                    </div>
+                    <div class="card-body">
+                        <p style="margin-bottom: 1rem; color: var(--text-secondary);">
+                            Click to auto-fill coordinates:
+                        </p>
+                        <div class="location-list">
+                            <div class="location-item" onclick="setCoordinates(26.8467, 80.9462, 'Lucknow')">
+                                <div class="location-item-icon">
+                                    <i class="fas fa-city"></i>
+                                </div>
+                                <div class="location-item-info">
+                                    <div class="location-item-name">Lucknow</div>
+                                    <div class="location-item-coords">26.8467, 80.9462</div>
+                                </div>
+                            </div>
+                            <div class="location-item" onclick="setCoordinates(28.6139, 77.2090, 'Delhi')">
+                                <div class="location-item-icon">
+                                    <i class="fas fa-landmark"></i>
+                                </div>
+                                <div class="location-item-info">
+                                    <div class="location-item-name">Delhi</div>
+                                    <div class="location-item-coords">28.6139, 77.2090</div>
+                                </div>
+                            </div>
+                            <div class="location-item" onclick="setCoordinates(26.4499, 80.3319, 'Kanpur')">
+                                <div class="location-item-icon">
+                                    <i class="fas fa-industry"></i>
+                                </div>
+                                <div class="location-item-info">
+                                    <div class="location-item-name">Kanpur</div>
+                                    <div class="location-item-coords">26.4499, 80.3319</div>
+                                </div>
+                            </div>
+                            <div class="location-item" onclick="setCoordinates(27.1767, 78.0081, 'Agra')">
+                                <div class="location-item-icon">
+                                    <i class="fas fa-monument"></i>
+                                </div>
+                                <div class="location-item-info">
+                                    <div class="location-item-name">Agra</div>
+                                    <div class="location-item-coords">27.1767, 78.0081</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Disaster Types Info -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-info-circle"></i> Disaster Types</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="disaster-types-list">
+                            <div class="disaster-type-item">
+                                <span class="disaster-type-icon">🌊</span>
+                                <div>
+                                    <strong>Flood</strong>
+                                    <p>Water overflow affecting populated areas</p>
+                                </div>
+                            </div>
+                            <div class="disaster-type-item">
+                                <span class="disaster-type-icon">🏗️</span>
+                                <div>
+                                    <strong>Earthquake</strong>
+                                    <p>Seismic activity causing structural damage</p>
+                                </div>
+                            </div>
+                            <div class="disaster-type-item">
+                                <span class="disaster-type-icon">🔥</span>
+                                <div>
+                                    <strong>Fire</strong>
+                                    <p>Uncontrolled fire in urban or forest areas</p>
+                                </div>
+                            </div>
+                            <div class="disaster-type-item">
+                                <span class="disaster-type-icon">🏔️</span>
+                                <div>
+                                    <strong>Landslide</strong>
+                                    <p>Ground movement in hilly regions</p>
+                                </div>
+                            </div>
+                            <div class="disaster-type-item">
+                                <span class="disaster-type-icon">🌪️</span>
+                                <div>
+                                    <strong>Cyclone</strong>
+                                    <p>Severe storm with high winds</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 1.5rem;">
+                    <div class="card-header">
+                        <h3><i class="fas fa-database"></i> Enhanced Data Intelligence</h3>
+                    </div>
+                    <div class="card-body" id="enhanced-intelligence">
+                        <p style="color: var(--text-secondary); margin: 0;">
+                            Set location and radius to preview population, seismic history, and elevation flood risk.
+                        </p>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 1.5rem;">
+                    <div class="card-header">
+                        <h3><i class="fas fa-history"></i> Reported Disaster History</h3>
+                    </div>
+                    <div class="card-body">
+                        <div id="disaster-history-list">
+                            <p style="color: var(--text-secondary); margin: 0;">Loading reported disasters...</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card" style="margin-top: 1.5rem;">
+                    <div class="card-header">
+                        <h3><i class="fas fa-hospital"></i> Nearby Facilities for Selected History</h3>
+                    </div>
+                    <div class="card-body" id="history-facilities-result">
+                        <p style="color: var(--text-secondary); margin: 0;">
+                            Click any reported disaster above to view nearby facilities.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Loading Modal -->
+    <div id="loading-modal" class="modal">
+        <div class="modal-content">
+            <div class="spinner"></div>
+            <p style="margin-top: 1rem;">Processing emergency response...</p>
+        </div>
+    </div>
+
+    <!-- Notification Details Modal -->
+    <div id="notification-modal" class="modal">
+        <div class="modal-content" style="max-width: 600px; max-height: 80vh; overflow-y: auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                <h3 style="margin: 0;"><i class="fas fa-envelope"></i> Emergency Notification Details</h3>
+                <button onclick="closeNotificationModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary);">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div id="notification-content"></div>
+        </div>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <script src="js/i18n.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/modern-disasters.js"></script>
+</body>
+</html>

@@ -1,0 +1,533 @@
+/**
+ * Emergency-Optimized Theme for AeGIS-1
+ * Production-grade design system for life-critical operations
+ * 
+ * CRITICAL: This system handles real emergency data
+ * All visual elements designed for high-stress, time-critical scenarios
+ */
+
+/* ============================================
+   EMERGENCY COLOR SYSTEM
+   ============================================ */
+
+:root {
+    /* Emergency Status Colors - Universal Recognition */
+    --emergency-danger: #EF4444;           /* Red - Critical/Blocked/Danger */
+    --emergency-danger-dark: #DC2626;      /* Dark red for text */
+    --emergency-danger-light: #FEE2E2;     /* Light red for backgrounds */
+    
+    --emergency-warning: #F59E0B;          /* Orange - Caution/Warning */
+    --emergency-warning-dark: #D97706;     /* Dark orange for text */
+    --emergency-warning-light: #FEF3C7;    /* Light orange for backgrounds */
+    
+    --emergency-safe: #10B981;             /* Green - Safe/Available/Operational */
+    --emergency-safe-dark: #059669;        /* Dark green for text */
+    --emergency-safe-light: #D1FAE5;       /* Light green for backgrounds */
+    
+    --emergency-info: #3B82F6;             /* Blue - Information/Neutral */
+    --emergency-info-dark: #2563EB;        /* Dark blue for text */
+    --emergency-info-light: #DBEAFE;       /* Light blue for backgrounds */
+    
+    /* High Contrast Variants for Bright Environments */
+    --emergency-danger-hc: #B91C1C;        /* High contrast red */
+    --emergency-warning-hc: #B45309;       /* High contrast orange */
+    --emergency-safe-hc: #047857;          /* High contrast green */
+    
+    /* Emergency Action Colors */
+    --emergency-primary: #DC2626;          /* Primary emergency action */
+    --emergency-primary-hover: #B91C1C;    /* Primary hover state */
+    
+    /* Touch Target Sizes - Glove-Friendly */
+    --touch-target-min: 44px;              /* Minimum touch target */
+    --touch-target-comfortable: 48px;      /* Comfortable touch target */
+    --touch-target-large: 56px;            /* Large touch target */
+    
+    /* Emergency Typography */
+    --font-emergency-large: 18px;          /* Large readable text */
+    --font-emergency-normal: 16px;         /* Normal readable text */
+    --font-emergency-small: 14px;          /* Small but readable text */
+    
+    /* High Contrast Text */
+    --text-emergency-primary: #111827;     /* Maximum contrast */
+    --text-emergency-secondary: #374151;   /* Secondary text */
+    
+    /* Emergency Spacing */
+    --space-emergency-tight: 8px;          /* Tight spacing */
+    --space-emergency-normal: 16px;        /* Normal spacing */
+    --space-emergency-loose: 24px;         /* Loose spacing */
+}
+
+/* ============================================
+   STATUS BADGES
+   ============================================ */
+
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 12px;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.5;
+    white-space: nowrap;
+}
+
+.status-safe {
+    background: var(--emergency-safe-light);
+    color: var(--emergency-safe-dark);
+    border: 1px solid var(--emergency-safe);
+}
+
+.status-warning {
+    background: var(--emergency-warning-light);
+    color: var(--emergency-warning-dark);
+    border: 1px solid var(--emergency-warning);
+}
+
+.status-danger {
+    background: var(--emergency-danger-light);
+    color: var(--emergency-danger-dark);
+    border: 1px solid var(--emergency-danger);
+}
+
+.status-info {
+    background: var(--emergency-info-light);
+    color: var(--emergency-info-dark);
+    border: 1px solid var(--emergency-info);
+}
+
+/* Status indicator dot */
+.status-badge::before {
+    content: '';
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+/* ============================================
+   CAPACITY INDICATORS
+   ============================================ */
+
+.capacity-indicator {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    background: var(--gray-100);
+    border: 1px solid var(--border-color);
+}
+
+.capacity-available {
+    background: var(--emergency-safe-light);
+    border-color: var(--emergency-safe);
+    color: var(--emergency-safe-dark);
+}
+
+.capacity-limited {
+    background: var(--emergency-warning-light);
+    border-color: var(--emergency-warning);
+    color: var(--emergency-warning-dark);
+}
+
+.capacity-full {
+    background: var(--emergency-danger-light);
+    border-color: var(--emergency-danger);
+    color: var(--emergency-danger-dark);
+}
+
+/* ============================================
+   ROUTE STATUS INDICATORS
+   ============================================ */
+
+.route-status {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.route-status-open {
+    background: var(--emergency-safe-light);
+    color: var(--emergency-safe-dark);
+    border-left: 4px solid var(--emergency-safe);
+}
+
+.route-status-risky {
+    background: var(--emergency-warning-light);
+    color: var(--emergency-warning-dark);
+    border-left: 4px solid var(--emergency-warning);
+}
+
+.route-status-blocked {
+    background: var(--emergency-danger-light);
+    color: var(--emergency-danger-dark);
+    border-left: 4px solid var(--emergency-danger);
+}
+
+/* ============================================
+   EMERGENCY BUTTONS
+   ============================================ */
+
+.btn-emergency-primary {
+    min-height: var(--touch-target-comfortable);
+    padding: 12px 24px;
+    background: var(--emergency-primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: var(--font-emergency-normal);
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 150ms ease-out;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-emergency-primary:hover:not(:disabled) {
+    background: var(--emergency-primary-hover);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+}
+
+.btn-emergency-primary:active:not(:disabled) {
+    transform: translateY(0);
+}
+
+.btn-emergency-primary:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.btn-emergency-secondary {
+    min-height: var(--touch-target-min);
+    padding: 10px 20px;
+    background: white;
+    color: var(--text-emergency-primary);
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    font-size: var(--font-emergency-normal);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 150ms ease-out;
+}
+
+.btn-emergency-secondary:hover:not(:disabled) {
+    border-color: var(--emergency-primary);
+    background: var(--emergency-danger-light);
+}
+
+/* ============================================
+   TOAST NOTIFICATIONS
+   ============================================ */
+
+.toast-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 400px;
+}
+
+.toast {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 16px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    border-left: 4px solid var(--emergency-info);
+    animation: slideIn 250ms ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(400px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.toast-success {
+    border-left-color: var(--emergency-safe);
+}
+
+.toast-warning {
+    border-left-color: var(--emergency-warning);
+}
+
+.toast-error {
+    border-left-color: var(--emergency-danger);
+}
+
+.toast-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.toast-success .toast-icon {
+    color: var(--emergency-safe);
+}
+
+.toast-warning .toast-icon {
+    color: var(--emergency-warning);
+}
+
+.toast-error .toast-icon {
+    color: var(--emergency-danger);
+}
+
+.toast-content {
+    flex: 1;
+}
+
+.toast-title {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 4px;
+    color: var(--text-emergency-primary);
+}
+
+.toast-message {
+    font-size: 13px;
+    color: var(--text-emergency-secondary);
+    line-height: 1.4;
+}
+
+.toast-close {
+    background: none;
+    border: none;
+    color: var(--gray-400);
+    cursor: pointer;
+    padding: 0;
+    font-size: 18px;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.toast-close:hover {
+    color: var(--gray-600);
+}
+
+/* ============================================
+   LOADING STATES
+   ============================================ */
+
+.loading-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.95);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.loading-content {
+    text-align: center;
+}
+
+.loading-spinner-large {
+    width: 48px;
+    height: 48px;
+    border: 4px solid var(--gray-200);
+    border-top-color: var(--emergency-primary);
+    border-radius: 50%;
+    animation: spin 800ms linear infinite;
+    margin: 0 auto 16px;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.loading-text {
+    font-size: 14px;
+    font-weight: 500;
+    color: var(--text-emergency-secondary);
+}
+
+/* Inline loading indicator */
+.loading-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--text-emergency-secondary);
+}
+
+.loading-spinner-small {
+    width: 16px;
+    height: 16px;
+    border: 2px solid var(--gray-300);
+    border-top-color: var(--emergency-primary);
+    border-radius: 50%;
+    animation: spin 600ms linear infinite;
+}
+
+/* ============================================
+   ALERT BANNERS
+   ============================================ */
+
+.alert-banner {
+    padding: 16px 20px;
+    border-radius: 8px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.alert-banner-success {
+    background: var(--emergency-safe-light);
+    border: 1px solid var(--emergency-safe);
+    color: var(--emergency-safe-dark);
+}
+
+.alert-banner-warning {
+    background: var(--emergency-warning-light);
+    border: 1px solid var(--emergency-warning);
+    color: var(--emergency-warning-dark);
+}
+
+.alert-banner-danger {
+    background: var(--emergency-danger-light);
+    border: 1px solid var(--emergency-danger);
+    color: var(--emergency-danger-dark);
+}
+
+.alert-banner-info {
+    background: var(--emergency-info-light);
+    border: 1px solid var(--emergency-info);
+    color: var(--emergency-info-dark);
+}
+
+.alert-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.alert-content {
+    flex: 1;
+}
+
+.alert-title {
+    font-weight: 600;
+    font-size: 15px;
+    margin-bottom: 4px;
+}
+
+.alert-message {
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* ============================================
+   HIGH CONTRAST MODE
+   ============================================ */
+
+@media (prefers-contrast: high) {
+    :root {
+        --emergency-danger: var(--emergency-danger-hc);
+        --emergency-warning: var(--emergency-warning-hc);
+        --emergency-safe: var(--emergency-safe-hc);
+    }
+    
+    .btn-emergency-primary,
+    .status-badge,
+    .capacity-indicator,
+    .route-status {
+        border-width: 2px;
+    }
+}
+
+/* ============================================
+   REDUCED MOTION
+   ============================================ */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* ============================================
+   FOCUS INDICATORS (Keyboard Navigation)
+   ============================================ */
+
+*:focus-visible {
+    outline: 3px solid var(--emergency-primary);
+    outline-offset: 2px;
+}
+
+button:focus-visible,
+a:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+    outline: 3px solid var(--emergency-primary);
+    outline-offset: 2px;
+}
+
+/* ============================================
+   UTILITY CLASSES
+   ============================================ */
+
+.text-danger {
+    color: var(--emergency-danger-dark);
+}
+
+.text-warning {
+    color: var(--emergency-warning-dark);
+}
+
+.text-safe {
+    color: var(--emergency-safe-dark);
+}
+
+.bg-danger-light {
+    background-color: var(--emergency-danger-light);
+}
+
+.bg-warning-light {
+    background-color: var(--emergency-warning-light);
+}
+
+.bg-safe-light {
+    background-color: var(--emergency-safe-light);
+}
+
+.border-danger {
+    border-color: var(--emergency-danger);
+}
+
+.border-warning {
+    border-color: var(--emergency-warning);
+}
+
+.border-safe {
+    border-color: var(--emergency-safe);
+}

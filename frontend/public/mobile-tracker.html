@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Mobile Tracker - AeGIS-1</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Sora:wght@500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <link rel="stylesheet" href="css/modern-style.css">
+    <link rel="stylesheet" href="css/ultra-modern.css">
+
+    <style>
+        :root {
+            --tracker-bg: #f3f7ff;
+            --tracker-ink: #0f172a;
+            --tracker-muted: #475569;
+            --tracker-border: #dbe6f2;
+            --tracker-card: #ffffff;
+            --tracker-blue: #1e3a8a;
+            --tracker-cyan: #0ea5e9;
+            --tracker-shadow: 0 22px 50px rgba(15, 23, 42, 0.14);
+        }
+
+        body {
+            background:
+                radial-gradient(circle at 8% 8%, rgba(14, 165, 233, 0.18), transparent 40%),
+                radial-gradient(circle at 90% 5%, rgba(30, 58, 138, 0.16), transparent 38%),
+                linear-gradient(135deg, #eef4ff 0%, #f8fbff 58%, #edf7ff 100%);
+            min-height: 100vh;
+            padding: 1rem 0.75rem 1.5rem;
+            color: var(--tracker-ink);
+            font-family: 'Manrope', sans-serif;
+        }
+
+        .tracker-container {
+            max-width: 560px;
+            margin: 0 auto;
+            animation: fadeInUp 0.45s ease-out;
+        }
+
+        .tracker-card {
+            background: var(--tracker-card);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: var(--tracker-shadow);
+            border: 1px solid rgba(219, 230, 242, 0.9);
+            margin-bottom: 1rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tracker-card::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            background: linear-gradient(160deg, rgba(30, 58, 138, 0.05), transparent 36%);
+        }
+
+        .tracker-header {
+            text-align: center;
+            margin-bottom: 1.35rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .tracker-header h1 {
+            font-size: 1.55rem;
+            font-weight: 800;
+            margin-bottom: 0.35rem;
+            font-family: 'Sora', sans-serif;
+            letter-spacing: -0.02em;
+            color: var(--tracker-blue);
+        }
+
+        .tracker-subheader {
+            color: var(--tracker-muted);
+            font-size: 0.94rem;
+            font-weight: 500;
+        }
+
+        .tracker-strip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            padding: 0.4rem 0.75rem;
+            border-radius: 999px;
+            background: rgba(30, 58, 138, 0.08);
+            color: var(--tracker-blue);
+            font-size: 0.76rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 0.65rem;
+        }
+
+        .tracker-logo {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 0.35rem;
+        }
+
+        .section-title {
+            margin-bottom: 0.75rem;
+            font-size: 1.02rem;
+            font-weight: 800;
+            color: var(--tracker-ink);
+        }
+
+        .role-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.85rem;
+            margin-bottom: 1rem;
+        }
+
+        .role-button {
+            background: #f9fbff;
+            border: 1px solid var(--tracker-border);
+            border-radius: 14px;
+            padding: 0.8rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-align: center;
+            position: relative;
+        }
+
+        .role-button:hover {
+            transform: translateY(-2px);
+            border-color: #9ab4dd;
+            box-shadow: 0 10px 20px rgba(30, 58, 138, 0.12);
+        }
+
+        .role-button.selected {
+            border-color: var(--tracker-blue);
+            background: linear-gradient(140deg, rgba(30, 58, 138, 0.12), rgba(14, 165, 233, 0.08));
+            box-shadow: 0 10px 18px rgba(30, 58, 138, 0.18);
+        }
+
+        .role-icon {
+            width: 100%;
+            height: 84px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            background: #eaf1fd;
+        }
+
+        .role-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .role-name {
+            font-weight: 700;
+            color: var(--tracker-ink);
+            font-size: 0.92rem;
+        }
+
+        .form-label {
+            color: var(--tracker-muted);
+            font-weight: 700;
+            font-size: 0.86rem;
+        }
+
+        .form-input {
+            border-radius: 12px;
+            border: 1px solid var(--tracker-border);
+            background: #fcfeff;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.8);
+        }
+
+        .status-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 0.65rem;
+            margin-bottom: 1rem;
+        }
+
+        .status-item {
+            text-align: center;
+            padding: 0.9rem 0.45rem;
+            background: linear-gradient(180deg, #fbfdff, #f3f8ff);
+            border: 1px solid var(--tracker-border);
+            border-radius: 12px;
+        }
+
+        .status-icon {
+            font-size: 1.1rem;
+            margin-bottom: 0.45rem;
+            color: var(--tracker-blue);
+        }
+
+        .status-label {
+            font-size: 0.72rem;
+            color: var(--tracker-muted);
+            margin-bottom: 0.25rem;
+            font-weight: 600;
+        }
+
+        .status-value {
+            font-weight: 700;
+            font-size: 0.875rem;
+        }
+
+        .status-value.active {
+            color: var(--success);
+        }
+
+        .status-value.error {
+            color: var(--danger);
+        }
+
+        .status-value.warning {
+            color: var(--warning);
+        }
+
+        .location-panel {
+            margin-bottom: 0.75rem;
+        }
+
+        .location-box {
+            background: #f8fbff;
+            padding: 0.95rem;
+            border-radius: 12px;
+            border: 1px solid var(--tracker-border);
+            font-family: "Consolas", "SFMono-Regular", monospace;
+            font-size: 0.83rem;
+            color: #0f172a;
+            line-height: 1.55;
+        }
+
+        .btn-primary,
+        .btn-danger {
+            border-radius: 12px;
+            font-weight: 700;
+            letter-spacing: 0.01em;
+            box-shadow: 0 12px 22px rgba(30, 58, 138, 0.18);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #1e3a8a, #0ea5e9);
+            border: none;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #dc2626, #f97316);
+            border: none;
+        }
+
+        .activity-log {
+            max-height: 240px;
+            overflow-y: auto;
+            background: #f7fbff;
+            border-radius: 12px;
+            border: 1px solid var(--tracker-border);
+            padding: 0.75rem;
+        }
+
+        .log-entry {
+            font-size: 0.76rem;
+            padding: 0.48rem 0.58rem;
+            margin-bottom: 0.4rem;
+            border-radius: 8px;
+            animation: slideInRight 0.3s ease-out;
+            border: 1px solid transparent;
+        }
+
+        .log-entry.success {
+            background: rgba(16, 185, 129, 0.12);
+            color: #047857;
+            border-color: rgba(16, 185, 129, 0.2);
+        }
+
+        .log-entry.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #b91c1c;
+            border-color: rgba(239, 68, 68, 0.18);
+        }
+
+        .log-entry.info {
+            background: rgba(59, 130, 246, 0.1);
+            color: #1d4ed8;
+            border-color: rgba(59, 130, 246, 0.18);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        @media (max-width: 520px) {
+            body {
+                padding: 0.7rem 0.55rem 1.2rem;
+            }
+
+            .tracker-card {
+                padding: 1.1rem;
+                border-radius: 16px;
+            }
+
+            .role-icon {
+                height: 72px;
+            }
+
+            .tracker-header h1 {
+                font-size: 1.35rem;
+            }
+
+            .status-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="tracker-container">
+        <div id="setup-screen" class="tracker-card">
+            <div class="tracker-header">
+                <div class="tracker-strip">
+                    <img src="assets/aegis-logo.png" alt="AeGIS-1" class="tracker-logo">
+                    AeGIS-1 Mobile Command
+                </div>
+                <h1>GPS Unit Tracker</h1>
+                <p class="tracker-subheader">Secure live location updates for emergency response teams</p>
+            </div>
+
+            <h3 class="section-title">Select Your Role</h3>
+            <div class="role-grid">
+                <div class="role-button" onclick="selectRole('police')">
+                    <div class="role-icon"><img src="assets/units/policecar.jpg" alt="Police"></div>
+                    <div class="role-name">Police</div>
+                </div>
+                <div class="role-button" onclick="selectRole('ambulance')">
+                    <div class="role-icon"><img src="assets/units/Ambulance-On-Street.jpg" alt="Ambulance"></div>
+                    <div class="role-name">Ambulance</div>
+                </div>
+                <div class="role-button" onclick="selectRole('fire')">
+                    <div class="role-icon"><img src="assets/units/Firetruck.jpg" alt="Fire"></div>
+                    <div class="role-name">Fire</div>
+                </div>
+                <div class="role-button" onclick="selectRole('rescue')">
+                    <div class="role-icon"><img src="assets/units/Helicopter.jpg" alt="Rescue"></div>
+                    <div class="role-name">Rescue</div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Unit Name/ID</label>
+                <input type="text" id="unit-name" class="form-input" placeholder="e.g., Unit-001, Ambulance-5" maxlength="50">
+            </div>
+
+            <button class="btn-primary ripple" style="width: 100%;" onclick="startTracking()">
+                <i class="fas fa-play"></i> Start Tracking
+            </button>
+        </div>
+
+        <div id="tracking-screen" class="hidden">
+            <div class="tracker-card">
+                <div class="tracker-header">
+                    <div class="tracker-strip">
+                        <i class="fas fa-shield-heart"></i> Live Session
+                    </div>
+                    <h1 id="tracking-title">Tracking Active</h1>
+                    <p id="tracking-subtitle" class="tracker-subheader"></p>
+                </div>
+
+                <div class="status-grid">
+                    <div class="status-item">
+                        <div class="status-icon"><i class="fas fa-satellite-dish"></i></div>
+                        <div class="status-label">GPS Status</div>
+                        <div class="status-value" id="gps-status">Requesting...</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-icon"><i class="fas fa-signal"></i></div>
+                        <div class="status-label">Connection</div>
+                        <div class="status-value" id="connection-status">Connecting...</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-icon"><i class="fas fa-arrows-rotate"></i></div>
+                        <div class="status-label">Updates</div>
+                        <div class="status-value" id="update-count">0</div>
+                    </div>
+                </div>
+
+                <div class="location-panel">
+                    <h4 class="section-title">Current Location</h4>
+                    <div class="location-box">
+                        <div>Lat: <span id="current-lat">--</span></div>
+                        <div>Lon: <span id="current-lon">--</span></div>
+                        <div>Speed: <span id="current-speed">--</span> km/h</div>
+                    </div>
+                </div>
+
+                <button class="btn-danger ripple" style="width: 100%; margin-bottom: 1rem;" onclick="stopTracking()">
+                    <i class="fas fa-stop"></i> Stop Tracking
+                </button>
+            </div>
+
+            <div class="tracker-card">
+                <h4 class="section-title">Activity Log</h4>
+                <div class="activity-log" id="activity-log"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.socket.io/4.5.4/socket.io.min.js"></script>
+    <script src="js/mobile-tracker.js"></script>
+    <script src="js/i18n.js"></script>
+</body>
+</html>

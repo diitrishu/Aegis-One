@@ -1,0 +1,47 @@
+:root {
+    /* Color Palette - Smart City / Dark Mode with Neon Accents */
+    --bg-primary: #0a0b0d;
+    --bg-secondary: #141518;
+    --bg-card: #1a1c20;
+
+    --text-primary: #f0f0f0;
+    --text-secondary: #9ca3af;
+
+    /* Neon Accent Colors */
+    --accent-primary: #4f7cff;
+    /* Cool blue */
+    --accent-secondary: #25c2a6;
+    /* Teal */
+    --accent-tertiary: #f4b740;
+    /* Warm amber */
+
+    --success-color: #10b981;
+    --danger-color: #ef4444;
+    --warning-color: #f59e0b;
+
+    /* Glassmorphism */
+    --glass-bg: rgba(26, 28, 32, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+
+    /* Spacing */
+    --spacing-xs: 4px;
+    --spacing-sm: 8px;
+    --spacing-md: 16px;
+    --spacing-lg: 24px;
+
+    /* Borders */
+    --border-color: #2d3139;
+    --radius-sm: 6px;
+    --radius-md: 10px;
+
+    /* Shadows */
+    --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+    --shadow-glow: 0 0 20px rgba(0, 217, 255, 0.3);
+}
+
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    font-family: 'Manrope', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}

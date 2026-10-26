@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>About - AeGIS-1</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <link rel="stylesheet" href="css/modern-style.css">
+    <link rel="stylesheet" href="css/ultra-modern.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <img src="assets/aegis-logo.png" alt="AeGIS-1 logo" class="brand-logo" style="width:32px;height:32px;object-fit:contain;">
+            <span>AeGIS-1</span>
+        </div>
+        <div class="nav-menu">
+            <a href="index-new.html" class="nav-link">
+                <i class="fas fa-home"></i> Dashboard
+            </a>
+            <a href="map-new.html" class="nav-link">
+                <i class="fas fa-map-marked-alt"></i> Map
+            </a>
+            <a href="disasters.html" class="nav-link">
+                <i class="fas fa-exclamation-triangle"></i> Disasters
+            </a>
+            <a href="facilities.html" class="nav-link">
+                <i class="fas fa-hospital"></i> Facilities
+            </a>
+            <a href="analytics.html" class="nav-link">
+                <i class="fas fa-chart-line"></i> Analytics
+            </a>
+            <a href="about.html" class="nav-link active">
+                <i class="fas fa-info-circle"></i> About
+            </a>
+        </div>
+        <div class="nav-actions">
+            <button class="btn-icon" onclick="toggleTheme()">
+                <i class="fas fa-moon"></i>
+            </button>
+            <button class="btn-primary" onclick="window.location.href='disasters.html'">
+                <i class="fas fa-plus"></i> Report Disaster
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <div class="hero" style="text-align: center;">
+            <div style="font-size: 4rem; margin-bottom: 1rem;">
+                <i class="fas fa-shield-alt"></i>
+            </div>
+            <h1 style="font-size: 3rem;">AeGIS-1</h1>
+            <p style="font-size: 1.5rem;">Real-time Emergency Response Coordination for North India</p>
+        </div>
+
+        <!-- Features -->
+        <div class="section">
+            <h2 class="section-title">Key Features</h2>
+            <div class="grid-3">
+                <div class="card">
+                    <div class="card-body" style="text-align: center;">
+                        <div style="width: 80px; height: 80px; margin: 0 auto 1.5rem; border-radius: var(--radius-lg); background: linear-gradient(135deg, var(--danger), #ff8a6b); display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem;">
+                            <i class="fas fa-exclamation-triangle"></i>
+                        </div>
+                        <h3 style="margin-bottom: 0.75rem;">Disaster Reporting</h3>
+                        <p style="color: var(--text-secondary);">
+                            Quick and efficient disaster event reporting with automated response coordination
+                        </p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body" style="text-align: center;">
+                        <div style="width: 80px; height: 80px; margin: 0 auto 1.5rem; border-radius: var(--radius-lg); background: linear-gradient(135deg, var(--info), #2dd4bf); display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem;">
+                            <i class="fas fa-map-marked-alt"></i>
+                        </div>
+                        <h3 style="margin-bottom: 0.75rem;">Interactive Mapping</h3>
+                        <p style="color: var(--text-secondary);">
+                            Real-time visualization of disaster zones and emergency facilities on interactive maps
+                        </p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body" style="text-align: center;">
+                        <div style="width: 80px; height: 80px; margin: 0 auto 1.5rem; border-radius: var(--radius-lg); background: linear-gradient(135deg, var(--success), #43e97b); display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem;">
+                            <i class="fas fa-hospital"></i>
+                        </div>
+                        <h3 style="margin-bottom: 0.75rem;">Facility Locator</h3>
+                        <p style="color: var(--text-secondary);">
+                            Find nearby hospitals, fire stations, and police stations for emergency response
+                        </p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body" style="text-align: center;">
+                        <div style="width: 80px; height: 80px; margin: 0 auto 1.5rem; border-radius: var(--radius-lg); background: linear-gradient(135deg, var(--warning), #ffb26b); display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem;">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <h3 style="margin-bottom: 0.75rem;">Analytics Dashboard</h3>
+                        <p style="color: var(--text-secondary);">
+                            Comprehensive analytics and insights on disaster patterns and response metrics
+                        </p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body" style="text-align: center;">
+                        <div style="width: 80px; height: 80px; margin: 0 auto 1.5rem; border-radius: var(--radius-lg); background: linear-gradient(135deg, var(--primary), var(--secondary)); display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem;">
+                            <i class="fas fa-route"></i>
+                        </div>
+                        <h3 style="margin-bottom: 0.75rem;">Route Optimization</h3>
+                        <p style="color: var(--text-secondary);">
+                            Optimized routing for emergency vehicles to reach disaster zones quickly
+                        </p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-body" style="text-align: center;">
+                        <div style="width: 80px; height: 80px; margin: 0 auto 1.5rem; border-radius: var(--radius-lg); background: linear-gradient(135deg, #4f7cff, #2dd4bf); display: flex; align-items: center; justify-content: center; color: white; font-size: 2rem;">
+                            <i class="fas fa-database"></i>
+                        </div>
+                        <h3 style="margin-bottom: 0.75rem;">GIS Integration</h3>
+                        <p style="color: var(--text-secondary);">
+                            Powered by QGIS and geospatial data for accurate disaster zone mapping
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technology Stack -->
+        <div class="section">
+            <h2 class="section-title">Technology Stack</h2>
+            <div class="card">
+                <div class="card-body">
+                    <div class="grid-2">
+                        <div>
+                            <h3 style="margin-bottom: 1rem; color: var(--text-primary);">
+                                <i class="fas fa-server"></i> Backend
+                            </h3>
+                            <div class="info-list">
+                                <div class="info-item">
+                                    <span class="info-label">Python</span>
+                                    <span class="info-value">3.x</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Flask</span>
+                                    <span class="info-value">REST API</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">QGIS</span>
+                                    <span class="info-value">GIS Server</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">SQLite/GeoPackage</span>
+                                    <span class="info-value">Database</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h3 style="margin-bottom: 1rem; color: var(--text-primary);">
+                                <i class="fas fa-laptop-code"></i> Frontend
+                            </h3>
+                            <div class="info-list">
+                                <div class="info-item">
+                                    <span class="info-label">HTML5/CSS3</span>
+                                    <span class="info-value">Modern UI</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">JavaScript</span>
+                                    <span class="info-value">ES6+</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Leaflet.js</span>
+                                    <span class="info-value">Mapping</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Chart.js</span>
+                                    <span class="info-value">Analytics</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Coverage Area -->
+        <div class="section">
+            <h2 class="section-title">Coverage Area</h2>
+            <div class="card">
+                <div class="card-body">
+                    <div style="display: flex; align-items: center; gap: 2rem; margin-bottom: 2rem;">
+                        <div style="font-size: 4rem; color: var(--primary);">
+                            <i class="fas fa-map-marked"></i>
+                        </div>
+                        <div>
+                            <h3 style="margin-bottom: 0.5rem;">North India Region</h3>
+                            <p style="color: var(--text-secondary); margin: 0;">
+                                Comprehensive coverage of Uttar Pradesh and surrounding states with real-time disaster monitoring and emergency response coordination
+                            </p>
+                        </div>
+                    </div>
+                    <div class="grid-3">
+                        <div class="info-item">
+                            <span class="info-label">
+                                <i class="fas fa-city"></i> Major Cities
+                            </span>
+                            <span class="info-value">50+</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">
+                                <i class="fas fa-map"></i> Districts
+                            </span>
+                            <span class="info-value">75+</span>
+                        </div>
+                        <div class="info-item">
+                            <span class="info-label">
+                                <i class="fas fa-hospital"></i> Facilities
+                            </span>
+                            <span class="info-value">1000+</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Start -->
+        <div class="section">
+            <h2 class="section-title">Quick Start Guide</h2>
+            <div class="grid-2">
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-rocket"></i> Getting Started</h3>
+                    </div>
+                    <div class="card-body">
+                        <ol style="padding-left: 1.5rem; color: var(--text-secondary); line-height: 2;">
+                            <li>Navigate to the <strong>Dashboard</strong> to view system status</li>
+                            <li>Use the <strong>Map</strong> to visualize disaster zones</li>
+                            <li>Report disasters via the <strong>Disasters</strong> page</li>
+                            <li>Find emergency facilities using the <strong>Facilities</strong> locator</li>
+                            <li>Monitor metrics on the <strong>Analytics</strong> dashboard</li>
+                        </ol>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-question-circle"></i> Need Help?</h3>
+                    </div>
+                    <div class="card-body">
+                        <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+                            For technical support or questions about the system:
+                        </p>
+                        <div class="info-list">
+                            <div class="info-item">
+                                <span class="info-label">
+                                    <i class="fas fa-book"></i> Documentation
+                                </span>
+                                <span class="info-value">Available</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">
+                                    <i class="fas fa-code"></i> API Docs
+                                </span>
+                                <span class="info-value">REST API</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">
+                                    <i class="fas fa-headset"></i> Support
+                                </span>
+                                <span class="info-value">24/7</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <script src="js/i18n.js"></script>
+    <script src="js/config.js"></script>
+    <script>
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.className = `toast ${type} show`;
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+
+        function toggleTheme() {
+            showToast('Dark mode coming soon!', 'info');
+        }
+    </script>
+</body>
+</html>

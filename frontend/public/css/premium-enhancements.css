@@ -1,0 +1,574 @@
+/**
+ * Premium Visual Enhancements
+ * Modern, beautiful design for professional disaster response system
+ * Maintains emergency functionality with stunning aesthetics
+ */
+
+/* ============================================
+   PREMIUM GRADIENTS & BACKGROUNDS
+   ============================================ */
+
+:root {
+    /* Premium Gradient Overlays */
+    --gradient-emergency: linear-gradient(135deg, #DC2626 0%, #EF4444 50%, #F87171 100%);
+    --gradient-warning: linear-gradient(135deg, #D97706 0%, #F59E0B 50%, #FBBF24 100%);
+    --gradient-success: linear-gradient(135deg, #059669 0%, #10B981 50%, #34D399 100%);
+    --gradient-info: linear-gradient(135deg, #2563EB 0%, #3B82F6 50%, #60A5FA 100%);
+
+    /* Premium Background Gradients */
+    --gradient-mesh:
+        radial-gradient(at 0% 0%, rgba(220, 38, 38, 0.1) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(239, 68, 68, 0.08) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(245, 158, 11, 0.05) 0px, transparent 50%),
+        radial-gradient(at 0% 100%, rgba(16, 185, 129, 0.08) 0px, transparent 50%);
+
+    /* Glassmorphism Effects */
+    --glass-bg: rgba(255, 255, 255, 0.7);
+    --glass-border: rgba(255, 255, 255, 0.18);
+    --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+
+    /* Premium Shadows */
+    --shadow-premium-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-premium-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+    --shadow-premium-lg: 0 8px 32px rgba(0, 0, 0, 0.16);
+    --shadow-premium-xl: 0 16px 48px rgba(0, 0, 0, 0.20);
+    --shadow-glow-red: 0 0 24px rgba(220, 38, 38, 0.3);
+    --shadow-glow-green: 0 0 24px rgba(16, 185, 129, 0.3);
+    --shadow-glow-orange: 0 0 24px rgba(245, 158, 11, 0.3);
+}
+
+/* ============================================
+   GLASSMORPHISM COMPONENTS
+   ============================================ */
+
+.glass-card {
+    background: var(--glass-bg);
+    backdrop-filter: blur(16px) saturate(180%);
+    -webkit-backdrop-filter: blur(16px) saturate(180%);
+    border: 1px solid var(--glass-border);
+    box-shadow: var(--shadow-premium-lg);
+    border-radius: 16px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-premium-xl);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.glass-panel {
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(20px) saturate(200%);
+    -webkit-backdrop-filter: blur(20px) saturate(200%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: var(--shadow-premium-md);
+}
+
+/* ============================================
+   PREMIUM BUTTONS
+   ============================================ */
+
+.btn-premium-primary {
+    position: relative;
+    background: var(--gradient-emergency);
+    color: white;
+    border: none;
+    padding: 14px 32px;
+    min-height: 48px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    overflow: hidden;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 4px 16px rgba(220, 38, 38, 0.3);
+}
+
+.btn-premium-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.5s;
+}
+
+.btn-premium-primary:hover::before {
+    left: 100%;
+}
+
+.btn-premium-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(220, 38, 38, 0.4), var(--shadow-glow-red);
+}
+
+.btn-premium-primary:active {
+    transform: translateY(0);
+}
+
+.btn-premium-success {
+    background: var(--gradient-success);
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+}
+
+.btn-premium-success:hover {
+    box-shadow: 0 8px 24px rgba(16, 185, 129, 0.4), var(--shadow-glow-green);
+}
+
+.btn-premium-warning {
+    background: var(--gradient-warning);
+    box-shadow: 0 4px 16px rgba(245, 158, 11, 0.3);
+}
+
+.btn-premium-warning:hover {
+    box-shadow: 0 8px 24px rgba(245, 158, 11, 0.4), var(--shadow-glow-orange);
+}
+
+/* ============================================
+   ANIMATED STATUS BADGES
+   ============================================ */
+
+.status-badge-premium {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    border-radius: 24px;
+    font-size: 13px;
+    font-weight: 600;
+    backdrop-filter: blur(8px);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.status-badge-premium::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, transparent 30%, rgba(255, 255, 255, 0.3) 50%, transparent 70%);
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+.status-badge-premium.safe {
+    background: linear-gradient(135deg, rgba(16, 185, 129, 0.2), rgba(52, 211, 153, 0.3));
+    color: #047857;
+    border: 1px solid rgba(16, 185, 129, 0.4);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+}
+
+.status-badge-premium.warning {
+    background: linear-gradient(135deg, rgba(245, 158, 11, 0.2), rgba(251, 191, 36, 0.3));
+    color: #B45309;
+    border: 1px solid rgba(245, 158, 11, 0.4);
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.2);
+}
+
+.status-badge-premium.danger {
+    background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(248, 113, 113, 0.3));
+    color: #B91C1C;
+    border: 1px solid rgba(239, 68, 68, 0.4);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2);
+}
+
+.status-badge-premium .pulse-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: currentColor;
+    animation: pulse-glow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-glow {
+
+    0%,
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 0.6;
+        transform: scale(1.2);
+    }
+}
+
+/* ============================================
+   PREMIUM CARDS WITH DEPTH
+   ============================================ */
+
+.premium-card {
+    background: white;
+    border-radius: 20px;
+    padding: 24px;
+    box-shadow:
+        0 1px 3px rgba(0, 0, 0, 0.05),
+        0 10px 40px rgba(0, 0, 0, 0.08);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.premium-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--gradient-emergency);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.premium-card:hover::before {
+    opacity: 1;
+}
+
+.premium-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow:
+        0 4px 8px rgba(0, 0, 0, 0.08),
+        0 20px 60px rgba(0, 0, 0, 0.12);
+}
+
+/* ============================================
+   ANIMATED GRADIENTS
+   ============================================ */
+
+.gradient-animated {
+    background: linear-gradient(-45deg,
+            #DC2626,
+            #EF4444,
+            #F59E0B,
+            #10B981);
+    background-size: 400% 400%;
+    animation: gradient-shift 15s ease infinite;
+}
+
+@keyframes gradient-shift {
+    0% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* ============================================
+   PREMIUM STAT CARDS
+   ============================================ */
+
+.stat-card-premium {
+    background: white;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: var(--shadow-premium-md);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-card-premium::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.stat-card-premium:hover::after {
+    opacity: 1;
+}
+
+.stat-card-premium:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-premium-lg);
+}
+
+.stat-icon-premium {
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    color: white;
+    margin-bottom: 16px;
+    position: relative;
+    overflow: hidden;
+}
+
+.stat-icon-premium::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transform: translateX(-100%);
+    transition: transform 0.6s;
+}
+
+.stat-card-premium:hover .stat-icon-premium::before {
+    transform: translateX(100%);
+}
+
+.stat-value-premium {
+    font-size: 36px;
+    font-weight: 700;
+    background: var(--gradient-emergency);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+}
+
+/* ============================================
+   FLOATING ANIMATIONS
+   ============================================ */
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.float-animation {
+    animation: float 3s ease-in-out infinite;
+}
+
+.float-animation-delayed {
+    animation: float 3s ease-in-out infinite;
+    animation-delay: 0.5s;
+}
+
+/* ============================================
+   PREMIUM INPUTS
+   ============================================ */
+
+.input-premium {
+    width: 100%;
+    padding: 14px 18px;
+    border: 2px solid #E5E7EB;
+    border-radius: 12px;
+    font-size: 15px;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.input-premium:focus {
+    outline: none;
+    border-color: #DC2626;
+    box-shadow: 0 0 0 4px rgba(220, 38, 38, 0.1);
+    transform: translateY(-2px);
+}
+
+.input-premium:hover {
+    border-color: #D1D5DB;
+}
+
+/* ============================================
+   PREMIUM TOOLTIPS
+   ============================================ */
+
+.tooltip-premium {
+    position: relative;
+}
+
+.tooltip-premium::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-8px);
+    padding: 8px 12px;
+    background: rgba(17, 24, 39, 0.95);
+    color: white;
+    font-size: 13px;
+    border-radius: 8px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(8px);
+}
+
+.tooltip-premium:hover::after {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-4px);
+}
+
+/* ============================================
+   LOADING STATES - PREMIUM
+   ============================================ */
+
+.skeleton-premium {
+    background: linear-gradient(90deg,
+            #F3F4F6 0%,
+            #E5E7EB 50%,
+            #F3F4F6 100%);
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s ease-in-out infinite;
+    border-radius: 8px;
+}
+
+@keyframes skeleton-loading {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+.spinner-premium {
+    width: 48px;
+    height: 48px;
+    border: 4px solid rgba(220, 38, 38, 0.1);
+    border-top-color: #DC2626;
+    border-radius: 50%;
+    animation: spin-premium 0.8s linear infinite;
+}
+
+@keyframes spin-premium {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ============================================
+   PREMIUM PROGRESS BARS
+   ============================================ */
+
+.progress-premium {
+    height: 8px;
+    background: #E5E7EB;
+    border-radius: 999px;
+    overflow: hidden;
+    position: relative;
+}
+
+.progress-bar-premium {
+    height: 100%;
+    background: var(--gradient-emergency);
+    border-radius: 999px;
+    transition: width 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.progress-bar-premium::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(90deg,
+            transparent,
+            rgba(255, 255, 255, 0.4),
+            transparent);
+    animation: progress-shine 2s infinite;
+}
+
+@keyframes progress-shine {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(100%);
+    }
+}
+
+/* ============================================
+   MESH GRADIENT BACKGROUND
+   ============================================ */
+
+.mesh-background {
+    position: relative;
+    background: linear-gradient(135deg, #FAFAFA 0%, #FFFFFF 100%);
+}
+
+.mesh-background::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--gradient-mesh);
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* ============================================
+   PREMIUM HOVER EFFECTS
+   ============================================ */
+
+.hover-lift {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.hover-lift:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--shadow-premium-lg);
+}
+
+.hover-glow {
+    transition: all 0.3s ease;
+}
+
+.hover-glow:hover {
+    box-shadow: 0 0 32px rgba(220, 38, 38, 0.3);
+}
+
+/* ============================================
+   RESPONSIVE PREMIUM DESIGN
+   ============================================ */
+
+@media (max-width: 768px) {
+
+    .glass-card,
+    .premium-card {
+        border-radius: 12px;
+        padding: 16px;
+    }
+
+    .stat-value-premium {
+        font-size: 28px;
+    }
+
+    .btn-premium-primary {
+        padding: 12px 24px;
+    }
+}

@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AeGIS-1 - Dashboard</title>
+
+    <!-- Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500;600;700;800&family=Sora:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <!-- Icons -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+    <link rel="stylesheet" href="css/modern-style.css">
+    
+    <!-- Ultra Modern Animations & Effects -->
+    <link rel="stylesheet" href="css/ultra-modern.css">
+</head>
+
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <img src="assets/aegis-logo.png" alt="AeGIS-1 logo" class="brand-logo">
+            <span>AeGIS-1</span>
+        </div>
+        <div class="nav-menu">
+            <a href="index-new.html" class="nav-link active">
+                <i class="fas fa-home"></i> Dashboard
+            </a>
+            <a href="map-new.html" class="nav-link">
+                <i class="fas fa-map-marked-alt"></i> Map
+            </a>
+            <a href="disasters.html" class="nav-link">
+                <i class="fas fa-exclamation-triangle"></i> Disasters
+            </a>
+            <a href="facilities.html" class="nav-link">
+                <i class="fas fa-hospital"></i> Facilities
+            </a>
+            <a href="analytics.html" class="nav-link">
+                <i class="fas fa-chart-line"></i> Analytics
+            </a>
+            <a href="index-operations.html" class="nav-link">
+                <i class="fas fa-crosshairs"></i> Operations
+            </a>
+            <a href="about.html" class="nav-link">
+                <i class="fas fa-info-circle"></i> About
+            </a>
+        </div>
+        <div class="nav-actions">
+            <select class="form-select nav-language-select" data-language-switcher aria-label="Language">
+                <option value="en">English</option>
+                <option value="hi">Hindi</option>
+            </select>
+            <button class="btn-icon" onclick="toggleTheme()">
+                <i class="fas fa-moon"></i>
+            </button>
+            <button class="btn-primary" onclick="window.location.href='disasters.html'">
+                <i class="fas fa-plus"></i> Report Disaster
+            </button>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-content">
+                <h1>🚨 Emergency Response Coordination</h1>
+                <p>Real-time disaster management for North India • Powered by AI & GIS Technology</p>
+                <div class="hero-stats">
+                    <div class="hero-stat glow-on-hover">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #ff6b6b 0%, #ffb26b 100%);">
+                            <i class="fas fa-heartbeat"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="system-status-text">Loading...</div>
+                            <div class="stat-label">System Status</div>
+                        </div>
+                    </div>
+                    <div class="hero-stat glow-on-hover">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #ff5c64 0%, #ff8a6b 100%);">
+                            <i class="fas fa-exclamation-circle"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="active-disasters">0</div>
+                            <div class="stat-label">Active Disasters</div>
+                        </div>
+                    </div>
+                    <div class="hero-stat glow-on-hover">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #4f7cff 0%, #2dd4bf 100%);">
+                            <i class="fas fa-hospital"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="total-facilities">0</div>
+                            <div class="stat-label">Emergency Facilities</div>
+                        </div>
+                    </div>
+                    <div class="hero-stat glow-on-hover">
+                        <div class="stat-icon" style="background: linear-gradient(135deg, #22c55e 0%, #2dd4bf 100%);">
+                            <i class="fas fa-map-marked"></i>
+                        </div>
+                        <div class="stat-info">
+                            <div class="stat-value" id="districts-covered">0</div>
+                            <div class="stat-label">Districts Covered</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Actions -->
+        <section class="section">
+            <h2 class="section-title">⚡ Quick Actions</h2>
+            <div class="quick-actions">
+                <div class="action-card ripple" onclick="window.location.href='disasters.html'">
+                    <div class="action-icon" style="background: linear-gradient(135deg, #ff5c64 0%, #ff8a6b 100%);">
+                        <i class="fas fa-plus-circle"></i>
+                    </div>
+                    <h3>Report Disaster</h3>
+                    <p>Create new disaster event and activate response</p>
+                </div>
+                <div class="action-card ripple" onclick="window.location.href='map-new.html'">
+                    <div class="action-icon" style="background: linear-gradient(135deg, #4f7cff 0%, #2dd4bf 100%);">
+                        <i class="fas fa-map"></i>
+                    </div>
+                    <h3>View Map</h3>
+                    <p>Interactive map with disaster zones and facilities</p>
+                </div>
+                <div class="action-card ripple" onclick="window.location.href='live-tracking.html'">
+                    <div class="action-icon" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                        <i class="fas fa-broadcast-tower"></i>
+                    </div>
+                    <h3>Live Tracking</h3>
+                    <p>Real-time GPS tracking of emergency units</p>
+                </div>
+                <div class="action-card ripple" onclick="window.location.href='facilities.html'">
+                    <div class="action-icon" style="background: linear-gradient(135deg, #22c55e 0%, #2dd4bf 100%);">
+                        <i class="fas fa-search-location"></i>
+                    </div>
+                    <h3>Find Facilities</h3>
+                    <p>Locate nearby emergency services and resources</p>
+                </div>
+                <div class="action-card ripple" onclick="window.location.href='analytics.html'">
+                    <div class="action-icon" style="background: linear-gradient(135deg, #f4b740 0%, #ffb26b 100%);">
+                        <i class="fas fa-chart-bar"></i>
+                    </div>
+                    <h3>View Analytics</h3>
+                    <p>Analyze disaster patterns and response metrics</p>
+                </div>
+                <div class="action-card ripple" onclick="window.location.href='mobile-tracker.html'">
+                    <div class="action-icon" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Mobile Tracker</h3>
+                    <p>GPS tracker for emergency response units</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- System Overview -->
+        <section class="section">
+            <h2 class="section-title">📊 System Overview</h2>
+            <div class="grid-2">
+                <!-- Facility Breakdown -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-building"></i> Facility Distribution</h3>
+                        <button class="btn-icon" onclick="loadSystemStatus()">
+                            <i class="fas fa-sync-alt"></i>
+                        </button>
+                    </div>
+                    <div class="card-body">
+                        <canvas id="facilityChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="card">
+                    <div class="card-header">
+                        <h3><i class="fas fa-clock"></i> System Information</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="info-list">
+                            <div class="info-item">
+                                <div class="info-label">
+                                    <i class="fas fa-hospital"></i> Hospitals
+                                </div>
+                                <div class="info-value" id="hospitals-count">0</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">
+                                    <i class="fas fa-fire-extinguisher"></i> Fire Stations
+                                </div>
+                                <div class="info-value" id="fire-stations-count">0</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">
+                                    <i class="fas fa-shield-alt"></i> Police Stations
+                                </div>
+                                <div class="info-value" id="police-stations-count">0</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">
+                                    <i class="fas fa-history"></i> Historical Disasters
+                                </div>
+                                <div class="info-value" id="historical-disasters">0</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">
+                                    <i class="fas fa-check-circle"></i> Operational Facilities
+                                </div>
+                                <div class="info-value" id="operational-facilities">0</div>
+                            </div>
+                            <div class="info-item">
+                                <div class="info-label">
+                                    <i class="fas fa-clock"></i> Last Updated
+                                </div>
+                                <div class="info-value" id="last-updated">Never</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Test Locations -->
+        <section class="section">
+            <h2 class="section-title">📍 Quick Test Locations</h2>
+            <div class="location-grid">
+                <div class="location-card ripple" onclick="testLocation(26.8467, 80.9462, 'Lucknow')">
+                    <div class="location-icon">
+                        <i class="fas fa-city"></i>
+                    </div>
+                    <h4>🏛️ Lucknow</h4>
+                    <p class="location-coords">26.8467, 80.9462</p>
+                    <span class="location-badge">Capital City</span>
+                </div>
+                <div class="location-card ripple" onclick="testLocation(28.6139, 77.2090, 'Delhi')">
+                    <div class="location-icon">
+                        <i class="fas fa-landmark"></i>
+                    </div>
+                    <h4>🏛️ Delhi</h4>
+                    <p class="location-coords">28.6139, 77.2090</p>
+                    <span class="location-badge">National Capital</span>
+                </div>
+                <div class="location-card ripple" onclick="testLocation(26.4499, 80.3319, 'Kanpur')">
+                    <div class="location-icon">
+                        <i class="fas fa-industry"></i>
+                    </div>
+                    <h4>🏭 Kanpur</h4>
+                    <p class="location-coords">26.4499, 80.3319</p>
+                    <span class="location-badge">Industrial Hub</span>
+                </div>
+                <div class="location-card ripple" onclick="testLocation(27.1767, 78.0081, 'Agra')">
+                    <div class="location-icon">
+                        <i class="fas fa-monument"></i>
+                    </div>
+                    <h4>🕌 Agra</h4>
+                    <p class="location-coords">27.1767, 78.0081</p>
+                    <span class="location-badge">Heritage City</span>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Toast Notification System -->
+    <script src="js/toast-notifications.js"></script>
+
+    <script src="js/i18n.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/modern-dashboard.js"></script>
+</body>
+
+</html>
