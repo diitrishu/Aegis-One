@@ -18,11 +18,16 @@ backend/data/disasters/*
 
 dataa/venv/
 dataa/datasets/*
+!dataa/datasets/elevation/
+dataa/datasets/elevation/*
+!dataa/datasets/elevation/processed/
+dataa/datasets/elevation/processed/*
+!dataa/datasets/elevation/processed/low_lying_areas.geojson
+!dataa/datasets/elevation/processed/statistics.json
 !dataa/datasets/population/
 dataa/datasets/population/*
 !dataa/datasets/population/processed/
 dataa/datasets/population/processed/*
-!dataa/datasets/population/processed/north_india_population_2020.tif
 !dataa/datasets/population/processed/statistics.json
 !dataa/datasets/seismic/
 dataa/datasets/seismic/*
@@ -35,7 +40,10 @@ osm_data/
 *.osrm*
 *.tif
 *.tiff
+# ...but keep the compact rasters the app reads at runtime
 !dataa/datasets/population/processed/north_india_population_2020.tif
+!dataa/datasets/elevation/processed/north_india_dem.tif
+!dataa/datasets/elevation/processed/slope.tif
 
 # Dependencies / build output
 node_modules/
