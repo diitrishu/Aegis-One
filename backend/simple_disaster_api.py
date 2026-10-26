@@ -40,7 +40,10 @@ v2_available = False
 try:
     from disaster_response_system_v2 import DisasterResponseSystemV2
     logger.info("Initializing V2.0 Enhanced Data System...")
-    v2_system = DisasterResponseSystemV2()
+    v2_system = DisasterResponseSystemV2(
+        data_dir=str(DATA_DIR),
+        enhanced_data_dir=str(Path(__file__).resolve().parent.parent / "dataa" / "datasets"),
+    )
     v2_available = v2_system.enhanced_features_active
     logger.info(f"✅ V2.0 Enhanced Data: {'ACTIVE' if v2_available else 'NOT ACTIVE (V1.0 fully operational)'}")
 except Exception as e:
@@ -408,6 +411,7 @@ def get_status():
             
             return jsonify({
                 "success": True,
+                "system_ready": True,
                 "total_disasters": total_disasters,
                 "historical_disasters": total_disasters,
                 "active_disasters": 0,  # Could be enhanced to track active vs historical

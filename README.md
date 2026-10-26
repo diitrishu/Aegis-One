@@ -87,7 +87,23 @@ docker compose up --build
 
 ## 🗄️ Data setup
 
-The geospatial datasets (~8 GB: OSM extract, OSRM files, GeoPackages, population rasters) are **not** stored in this repository. Place them under `backend/data/` (see [`docs/DATA_INVENTORY.md`](docs/DATA_INVENTORY.md) for the list). The main API expects `backend/data/up_india_complete.gpkg`. Helper scripts for deriving highway layers are in `backend/scripts/`.
+**Works out of the box.** The data the app reads at runtime is included (about 40 MB), so after cloning you can run the system straight away:
+
+| Included file | Used for |
+|---|---|
+| `backend/data/up_india_complete.gpkg` | Hospitals (5,870), fire stations (78), police stations (548), highways, risk-zone layers, user-reported disasters (starts empty) |
+| `backend/data/boundaries/North_India_Boundary_wgs84.*` | North India boundary |
+| `backend/data/infrastructure/highways_major.gpkg` | Major highway network |
+| `backend/data/disasters/` (flood inventory, landslide points, active fires) | Historical disaster data (1,006 floods, 332 landslides, active fires) |
+| `dataa/datasets/seismic/processed/` | Earthquake catalogue for the V2 earthquake and seismic-risk endpoints |
+| `frontend/public/data/risk_zones/*.geojson` | Risk-zone overlays on the map |
+
+**Optional, large datasets (not in the repo).** These are only needed for the extra V2 population and elevation endpoints, offline routing and the QGIS server, and can be rebuilt:
+
+- **Population and elevation rasters (V2):** run the scripts in [`dataa/`](dataa/QUICKSTART.md) (`download_all.sh`, then `process_all.sh`). Without them `/api/v2/population` and `/api/v2/elevation` return empty results; everything else is unaffected.
+- **Routing (OSRM) and QGIS server:** download an OSM extract (for example Uttar Pradesh from [Geofabrik](https://download.geofabrik.de/asia/india.html)) and build the OSRM files via `docker compose`, see `backend/docker-compose.yml`. `working_project.qgs` and the full source datasets are not included.
+
+The original inventory of source datasets is in [`docs/DATA_INVENTORY.md`](docs/DATA_INVENTORY.md); helper scripts for the highway layers are in `backend/scripts/`.
 
 ## ⚠️ Known gaps
 
