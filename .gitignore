@@ -1,0 +1,27 @@
+# Large geospatial data (not tracked - see "Data setup" in README)
+backend/data/
+dataa/
+osm_data/
+*.gpkg
+*.pbf
+*.osrm*
+*.tif
+*.tiff
+*.qgz
+*.qgs~
+
+# Dependencies / build output
+node_modules/
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# Local config & secrets
+.env
+*.log
+
+# Editor / OS
+.vscode/
+.DS_Store
+Thumbs.db
