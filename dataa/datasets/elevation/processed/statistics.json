@@ -1,0 +1,21 @@
+{
+  "source": "Terrain Tiles (Mapzen/Tilezen on AWS Open Data; NASA SRTM over India)",
+  "region": "North India (24-32N, 72-88E)",
+  "elevation_range_m": {
+    "min": 0.0,
+    "max": 8630.0,
+    "mean": 1446.1,
+    "median": 292.0
+  },
+  "low_lying_areas": {
+    "below_10m": 8,
+    "10m_to_50m": 388923,
+    "50m_to_100m": 1697188
+  },
+  "low_lying_blocks_exported": 32689,
+  "raster_info": {
+    "width": 6400,
+    "height": 3200,
+    "resolution_m": 278
+  }
+}

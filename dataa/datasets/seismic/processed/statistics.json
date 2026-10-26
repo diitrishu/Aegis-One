@@ -1,0 +1,23 @@
+{
+  "total_events": 1216,
+  "magnitude_range": {
+    "min": 4.0,
+    "max": 7.8,
+    "mean": 4.463207236842106
+  },
+  "depth_range_km": {
+    "min": 0.8,
+    "max": 115.6,
+    "mean": 18.164837993421052
+  },
+  "time_range": {
+    "earliest": "2000-01-11T09:40:09.960Z",
+    "latest": "2025-12-09T15:39:11.542Z"
+  },
+  "magnitude_distribution": {
+    "mag_4_5": 1072,
+    "mag_5_6": 133,
+    "mag_6_7": 8,
+    "mag_7_plus": 3
+  }
+}

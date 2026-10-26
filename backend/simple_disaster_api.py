@@ -40,7 +40,10 @@ v2_available = False
 try:
     from disaster_response_system_v2 import DisasterResponseSystemV2
     logger.info("Initializing V2.0 Enhanced Data System...")
-    v2_system = DisasterResponseSystemV2()
+    v2_system = DisasterResponseSystemV2(
+        data_dir=str(DATA_DIR),
+        enhanced_data_dir=str(Path(__file__).resolve().parent.parent / "dataa" / "datasets"),
+    )
     v2_available = v2_system.enhanced_features_active
     logger.info(f"✅ V2.0 Enhanced Data: {'ACTIVE' if v2_available else 'NOT ACTIVE (V1.0 fully operational)'}")
 except Exception as e:
@@ -408,6 +411,7 @@ def get_status():
             
             return jsonify({
                 "success": True,
+                "system_ready": True,
                 "total_disasters": total_disasters,
                 "historical_disasters": total_disasters,
                 "active_disasters": 0,  # Could be enhanced to track active vs historical
@@ -1031,11 +1035,21 @@ def get_flood_risk():
 
         high_risk = len([z for z in zones if z.get('risk_level') == 'HIGH'])
 
+        # Shapely geometries are not JSON serializable; convert to GeoJSON
+        def _serialize_zone(z):
+            out = dict(z)
+            geom = out.get('geometry')
+            if geom is not None and hasattr(geom, '__geo_interface__'):
+                out['geometry'] = geom.__geo_interface__
+            if isinstance(out.get('location'), tuple):
+                out['location'] = list(out['location'])
+            return out
+
         return jsonify({
             'success': True,
             'count': len(zones),
             'high_risk_count': high_risk,
-            'zones': zones[:50],
+            'zones': [_serialize_zone(z) for z in zones[:50]],
             'version': '2.0'
         })
     except Exception as e:

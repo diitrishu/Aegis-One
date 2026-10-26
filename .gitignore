@@ -1,14 +1,49 @@
-# Large geospatial data (not tracked - see "Data setup" in README)
-backend/data/
-dataa/
+# Geospatial data: everything under backend/data and dataa is ignored
+# EXCEPT the small files the app reads at runtime (whitelisted below).
+# Large raw inputs (OSM extracts, OSRM files, rasters) are not tracked;
+# see "Data setup" in the README for how to rebuild them.
+backend/data/*
+!backend/data/up_india_complete.gpkg
+!backend/data/boundaries/
+backend/data/boundaries/*
+!backend/data/boundaries/North_India_Boundary_wgs84.*
+!backend/data/infrastructure/
+backend/data/infrastructure/*
+!backend/data/infrastructure/highways_major.gpkg
+!backend/data/disasters/
+backend/data/disasters/*
+!backend/data/disasters/landslide_points.geojson
+!backend/data/disasters/india_flood_inventory_corrected.*
+!backend/data/disasters/active_fires.csv
+
+dataa/venv/
+dataa/datasets/*
+!dataa/datasets/elevation/
+dataa/datasets/elevation/*
+!dataa/datasets/elevation/processed/
+dataa/datasets/elevation/processed/*
+!dataa/datasets/elevation/processed/low_lying_areas.geojson
+!dataa/datasets/elevation/processed/statistics.json
+!dataa/datasets/population/
+dataa/datasets/population/*
+!dataa/datasets/population/processed/
+dataa/datasets/population/processed/*
+!dataa/datasets/population/processed/statistics.json
+!dataa/datasets/seismic/
+dataa/datasets/seismic/*
+!dataa/datasets/seismic/processed/
+dataa/datasets/seismic/processed/*
+!dataa/datasets/seismic/processed/earthquakes_north_india.gpkg
+!dataa/datasets/seismic/processed/statistics.json
 osm_data/
-*.gpkg
 *.pbf
 *.osrm*
 *.tif
 *.tiff
-*.qgz
-*.qgs~
+# ...but keep the compact rasters the app reads at runtime
+!dataa/datasets/population/processed/north_india_population_2020.tif
+!dataa/datasets/elevation/processed/north_india_dem.tif
+!dataa/datasets/elevation/processed/slope.tif
 
 # Dependencies / build output
 node_modules/

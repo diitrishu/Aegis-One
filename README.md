@@ -87,7 +87,30 @@ docker compose up --build
 
 ## 🗄️ Data setup
 
-The geospatial datasets (~8 GB: OSM extract, OSRM files, GeoPackages, population rasters) are **not** stored in this repository. Place them under `backend/data/` (see [`docs/DATA_INVENTORY.md`](docs/DATA_INVENTORY.md) for the list). The main API expects `backend/data/up_india_complete.gpkg`. Helper scripts for deriving highway layers are in `backend/scripts/`.
+**Works out of the box.** The data the app reads at runtime is included (about 75 MB), so after cloning you can run the system straight away:
+
+| Included file | Used for |
+|---|---|
+| `backend/data/up_india_complete.gpkg` | Hospitals (5,870), fire stations (78), police stations (548), highways, risk-zone layers, user-reported disasters (starts empty) |
+| `backend/data/boundaries/North_India_Boundary_wgs84.*` | North India boundary |
+| `backend/data/infrastructure/highways_major.gpkg` | Major highway network |
+| `backend/data/disasters/` (flood inventory, landslide points, active fires) | Historical disaster data (1,006 floods, 332 landslides, active fires) |
+| `dataa/datasets/seismic/processed/` | Earthquake catalogue for the V2 earthquake and seismic-risk endpoints |
+| `dataa/datasets/population/processed/` | Population raster for `/api/v2/population` and disaster reports (WorldPop 2020, ~550 m cells) |
+| `dataa/datasets/elevation/processed/` | Elevation (~280 m), slope and low-lying areas for `/api/v2/elevation` and `/api/v2/flood-risk` |
+| `frontend/public/data/risk_zones/*.geojson` | Risk-zone overlays on the map |
+
+**Population** uses a compact copy of the WorldPop 2020 raster: the original 100 m cells summed into ~550 m cells (519 MB down to 10 MB, total population preserved exactly). Queries with a radius of about 5 km or more match the full-resolution data to within roughly 1%; very small radii (1 km or less) are coarser. For full resolution, run `dataa/download_population.sh` and `process_population.py`; the backend works with either. `dataa/make_lite_population.py` shows how the compact copy was made.
+
+**Elevation** is built from the open Terrain Tiles dataset (Mapzen/Tilezen on AWS; NASA SRTM over India, public domain) at about 280 m resolution, covering 72-88°E, 24-32°N. It is checked against known heights (Delhi 216 m, Jaipur 431 m, Patna 55 m, Gorakhpur 82 m). To rebuild or change the resolution, run `python build_dem_terrarium.py` from `dataa/` (about 340 small tiles, no account needed). The older 90 m route (`download_elevation.sh` + `process_elevation.py`, CGIAR SRTM tiles) still works; its tile list was corrected (it previously pointed at the Middle East) and it now refuses a DEM that does not cover North India.
+
+*Elevation data: Terrain Tiles, Mapzen/Tilezen via AWS Open Data, derived from NASA SRTM. Population data: WorldPop (CC BY 4.0).*
+
+**Not in the repo (optional):**
+
+- **Routing (OSRM) and QGIS server:** download an OSM extract (for example Uttar Pradesh from [Geofabrik](https://download.geofabrik.de/asia/india.html)) and build the OSRM files via `docker compose`, see `backend/docker-compose.yml`. `working_project.qgs` and the full source datasets are not included.
+
+The original inventory of source datasets is in [`docs/DATA_INVENTORY.md`](docs/DATA_INVENTORY.md); helper scripts for the highway layers are in `backend/scripts/`.
 
 ## ⚠️ Known gaps
 
