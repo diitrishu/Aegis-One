@@ -89,6 +89,46 @@
                     </div>
                 </div>
 
+                <!-- Data Layers -->
+                <div class="control-section" id="data-layers-panel">
+                    <h3>🗂️ Data Layers</h3>
+                    <div class="control-section-content">
+                        <div class="layer-controls">
+                            <label class="layer-toggle">
+                                <input type="checkbox" id="population-toggle">
+                                <span class="toggle-slider"></span>
+                                <span class="label-text">Population Density</span>
+                            </label>
+                            <label class="layer-toggle">
+                                <input type="checkbox" id="damage-toggle">
+                                <span class="toggle-slider"></span>
+                                <span class="label-text">Damage Assessment</span>
+                            </label>
+                        </div>
+                        <div class="data-layer-upload" style="margin-top:10px">
+                            <label for="upload-geojson">Upload GeoJSON layer:</label>
+                            <input type="file" id="upload-geojson" accept=".geojson,.json,application/geo+json,application/json">
+                        </div>
+                        <div class="data-layer-external" style="margin-top:10px">
+                            <label>Add external layer:</label>
+                            <input type="text" id="external-layer-name" placeholder="Layer name">
+                            <select id="external-layer-type">
+                                <option value="geojson">GeoJSON URL</option>
+                                <option value="wfs">WFS URL</option>
+                                <option value="wms">WMS URL</option>
+                            </select>
+                            <input type="text" id="external-layer-url" placeholder="https://...">
+                            <button id="add-external-layer" type="button" class="btn btn-secondary mb-2">Add layer</button>
+                        </div>
+                        <div class="data-layer-order" style="margin-top:10px">
+                            <label for="layer-order-select">Layer order:</label>
+                            <select id="layer-order-select"></select>
+                            <button id="layer-bring-front" type="button" class="btn btn-secondary mb-2">Bring to front</button>
+                            <button id="layer-send-back" type="button" class="btn btn-secondary mb-2">Send to back</button>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Disaster Scenarios -->
                 <div class="control-section">
                     <h3>⚠️ Disaster Scenarios</h3>
@@ -244,6 +284,7 @@
                     <div class="control-section-content">
                         <button id="toggle-drawing" class="drawing-toggle btn btn-primary">✏️ Draw Disaster
                             Area</button>
+                        <button id="toggle-damage" class="drawing-toggle btn btn-secondary">🏚️ Assess Damage</button>
                         <div id="disaster-buffer-results" class="disaster-buffer-results"></div>
                     </div>
                 </div>
@@ -338,6 +379,37 @@
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">💾 Save Disaster Area</button>
                     <button type="button" id="cancel-drawing" class="btn btn-secondary">❌ Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Damage Assessment Modal -->
+    <div id="damage-form-panel" class="disaster-form-panel">
+        <div class="form-container">
+            <h3>🏚️ Damage Assessment</h3>
+            <form id="damage-form">
+                <div class="form-group">
+                    <label for="damage-level">Damage Level *</label>
+                    <select id="damage-level" name="damage_level" required>
+                        <option value="">-- Select Level --</option>
+                        <option value="none">🟢 None</option>
+                        <option value="light">🟡 Light</option>
+                        <option value="moderate">🟠 Moderate</option>
+                        <option value="severe">🔴 Severe</option>
+                        <option value="destroyed">⚫ Destroyed</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="damage-description">Description</label>
+                    <textarea id="damage-description" name="description" rows="3"
+                        placeholder="What was damaged, access problems, people affected..."></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">💾 Save Assessment</button>
+                    <button type="button" id="cancel-damage" class="btn btn-secondary">❌ Cancel</button>
                 </div>
             </form>
         </div>

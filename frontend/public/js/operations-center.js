@@ -274,15 +274,24 @@ async function loadSystemData() {
     }
 }
 
-// Update timeline chart
-function updateTimelineChart(totalDisasters) {
+// Update timeline chart with the number of disasters reported in each month of the current year
+async function updateTimelineChart(totalDisasters) {
     if (!charts.timeline) return;
-    
-    // Generate monthly data for the past 12 months
+
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-    const avgPerMonth = Math.floor(totalDisasters / 12);
-    const data = months.map(() => avgPerMonth + Math.floor(Math.random() * 20 - 10));
-    
+    const data = new Array(12).fill(0);
+    try {
+        const response = await fetch(`${AppConfig.apiUrl}/disasters`);
+        const result = await response.json();
+        const year = new Date().getFullYear();
+        (result.disasters || []).forEach((d) => {
+            const dt = new Date(d.created_at);
+            if (!Number.isNaN(dt.getTime()) && dt.getFullYear() === year) data[dt.getMonth()]++;
+        });
+    } catch (error) {
+        console.warn('Could not load disasters for the timeline:', error.message);
+    }
+
     charts.timeline.data.labels = months;
     charts.timeline.data.datasets[0].data = data;
     charts.timeline.update();
@@ -294,29 +303,22 @@ async function addFacilityMarkers() {
     if (miniMaps['chart-facilities-map']) {
         const map = miniMaps['chart-facilities-map'];
         
-        // Sample facility locations (in real implementation, fetch from API)
-        const facilities = [
-            { lat: 26.8467, lon: 80.9462, type: 'hospital' },
-            { lat: 28.6139, lon: 77.2090, type: 'hospital' },
-            { lat: 26.4499, lon: 80.3319, type: 'fire' },
-            { lat: 27.1767, lon: 78.0081, type: 'police' }
-        ];
-        
-        const icons = {
-            hospital: '🏥',
-            fire: '🚒',
-            police: '👮'
-        };
-        
-        facilities.forEach(facility => {
-            const icon = L.divIcon({
-                html: icons[facility.type],
-                className: 'facility-marker',
-                iconSize: [20, 20]
-            });
-            
-            L.marker([facility.lat, facility.lon], { icon }).addTo(map);
-        });
+        // Facilities from the API (hospitals, fire stations, police stations across the region)
+        const icons = { agency_hospital: '🏥', agency_fire: '🚒', agency_police: '👮' };
+        const bbox = '77,24,85,31';
+        for (const [layer, icon] of Object.entries(icons)) {
+            try {
+                const response = await fetch(`${AppConfig.apiUrl}/layers/${layer}/features?bbox=${bbox}&limit=${layer === 'agency_hospital' ? 150 : 100}`);
+                const data = await response.json();
+                (data.features || []).forEach((f) => {
+                    const [lon, lat] = f.geometry.coordinates;
+                    const marker = L.divIcon({ html: icon, className: 'facility-marker', iconSize: [20, 20] });
+                    L.marker([lat, lon], { icon: marker }).addTo(map);
+                });
+            } catch (error) {
+                console.warn(`Could not load ${layer} for the facilities map:`, error.message);
+            }
+        }
     }
     
     // Add response zones to response zones map

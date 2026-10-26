@@ -637,7 +637,7 @@ class SpatialAnalysisEngine {
             recommendations.push(`Prioritize aid for ${affectedPopulation.totalPopulation} affected residents.`);
         }
         if (serviceGapsAreaKm2 > 0) {
-            recommendations.push(`Establish temporary services for ${serviceGapsAreaKm2.toFixed(2)} km? coverage gaps.`);
+            recommendations.push(`Establish temporary services for ${serviceGapsAreaKm2.toFixed(2)} km² coverage gaps.`);
         }
         if (priorityZones.length > 0) {
             recommendations.push(`Focus humanitarian aid on top ${Math.min(3, priorityZones.length)} priority zones.`);

@@ -688,6 +688,7 @@ class RouteOptimizationEngine {
                             incident: incidentLocation,
                             facility_type: facilityType,
                             max_facilities: 1,
+                            facility_coordinates: facility.coordinates, // route to this specific facility
                             max_distance: options.maxDistance || 50000,
                             vehicle_profile: this.getEmergencyVehicleProfile(facilityType)
                         };

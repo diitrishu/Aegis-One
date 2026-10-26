@@ -1,31 +1,63 @@
+# Default stack: everything the app needs, nothing to configure.
+#     docker compose up --build        (from backend/)   ->  http://localhost:3000
+#
+# The legacy QGIS Server / OSRM / PostGIS stack is still available under the
+# "legacy" profile:  docker compose --profile legacy up   (needs backend/.env, see .env.example)
 services:
-  qgis-server:
-    build: .
-    container_name: qgis-server
+  api:
+    build: { context: .., dockerfile: backend/Dockerfile.api }
+    command: python simple_disaster_api.py
+    ports: ["5000:5000"]
+    environment:
+      - GPKG_WORK_PATH=/tmp/up_india.gpkg
     restart: unless-stopped
+
+  routing:
+    build: { context: .., dockerfile: backend/Dockerfile.routing }
+    ports: ["8082:8082"]
+    restart: unless-stopped
+
+  wms:
+    build: { context: .., dockerfile: backend/Dockerfile.api }
+    command: python wms_server.py
+    ports: ["8081:8081"]
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8081/health"]
+      interval: 30s
+    restart: unless-stopped
+
+  tracking:
+    build: { context: .., dockerfile: backend/Dockerfile.api }
+    command: python location_tracking_api.py
+    ports: ["5052:5052"]
+    healthcheck:
+      disable: true
+    restart: unless-stopped
+
+  frontend:
+    build: { context: ../frontend }
+    ports: ["3000:3000"]
+    environment:
+      - BACKEND_URL=http://api:5000
+    depends_on: [api, routing, wms]
+    restart: unless-stopped
+
+  # ---- legacy services (optional) -----------------------------------------
+  qgis-server:
+    profiles: [legacy]
+    build: .
     user: "0:0"
     environment:
       - QGIS_PROJECT_FILE=/io/data/working_project.qgs
-      - QGIS_SERVER_LOG_LEVEL=1
-      - QGIS_SERVER_PARALLEL_RENDERING=true
-      - QGIS_SERVER_MAX_THREADS=4
-      - QGIS_SERVER_WMS_MAX_HEIGHT=5000
-      - QGIS_SERVER_WMS_MAX_WIDTH=5000
-      - QGIS_SERVER_CACHE_DIRECTORY=/tmp/qgis-cache
-      - QGIS_SERVER_CACHE_SIZE=100
     volumes:
-      - ./data:/io/data:rw  # Changed to read-write for API access
+      - ./data:/io/data:rw
       - ./plugins:/io/plugins:ro
-    ports:
-      - "8081:80"
-    networks:
-      - disaster-network
+    ports: ["8090:80"]
 
   postgres:
+    profiles: [legacy]
     image: postgis/postgis:15-3.3
-    container_name: disaster-postgres
-    ports:
-      - "5432:5432"
+    ports: ["5432:5432"]
     environment:
       - POSTGRES_DB=${POSTGRES_DB:-disaster_response}
       - POSTGRES_USER=${POSTGRES_USER:-disaster_user}
@@ -33,88 +65,6 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./sql:/docker-entrypoint-initdb.d
-    networks:
-      - disaster-network
-    restart: unless-stopped
-
-  osrm-preprocess:
-    image: osrm/osrm-backend:latest
-    container_name: osrm-preprocess
-    volumes:
-      - ../osm_data:/data
-      - osrm_data:/osrm
-    command: |
-      sh -c "
-        echo 'Starting OSRM preprocessing...' &&
-        if [ ! -f /osrm/northern-zone-latest.osrm ]; then
-          echo 'Extracting OSM data...' &&
-          cd /osrm &&
-          cp /data/northern-zone-latest.osm.pbf /osrm/northern-zone-latest.osm.pbf &&
-          osrm-extract -p /opt/car.lua /osrm/northern-zone-latest.osm.pbf &&
-          echo 'Partitioning...' &&
-          osrm-partition /osrm/northern-zone-latest.osrm &&
-          echo 'Customizing...' &&
-          osrm-customize /osrm/northern-zone-latest.osrm &&
-          echo 'OSRM preprocessing completed!'
-        else
-          echo 'OSRM data already processed'
-        fi
-      "
-    networks:
-      - disaster-network
-
-  osrm-backend:
-    image: osrm/osrm-backend:latest
-    container_name: osrm-server
-    ports:
-      - "5000:5000"
-    volumes:
-      - osrm_data:/data
-    command: osrm-routed --algorithm mld /data/northern-zone-latest.osrm --port 5000 --ip 0.0.0.0
-    depends_on:
-      - osrm-preprocess
-    networks:
-      - disaster-network
-    restart: unless-stopped
-
-  routing-api:
-    build:
-      context: .
-      dockerfile: Dockerfile.routing
-    container_name: routing-api
-    ports:
-      - "8082:8000"
-    environment:
-      - OSRM_URL=http://osrm-backend:5000
-      - POSTGRES_URL=postgresql://${POSTGRES_USER:-disaster_user}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB:-disaster_response}
-    depends_on:
-      - osrm-backend
-      - postgres
-    networks:
-      - disaster-network
-    restart: unless-stopped
-
-  disaster-api:
-    build:
-      context: .
-      dockerfile: Dockerfile.api
-    container_name: disaster-api
-    ports:
-      - "5050:5000"
-    environment:
-      - GPKG_WORK_PATH=/tmp/up_india.gpkg
-    volumes:
-      - ./data:/app/data:rw
-    depends_on:
-      - qgis-server
-    networks:
-      - disaster-network
-    restart: unless-stopped
 
 volumes:
   postgres_data:
-  osrm_data:
-
-networks:
-  disaster-network:
-    driver: bridge

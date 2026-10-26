@@ -1,10 +1,17 @@
-Flask==2.3.3
-Flask-CORS==4.0.0
-numpy<2
-shapely==2.0.2
-requests==2.31.0
-Werkzeug==2.3.7
-geopandas
+# Everything the AEGIS backend services need (API 5000, routing 8082, WMS 8081, tracking 5052).
+# Tested on Python 3.11 - 3.13.
+Flask>=2.3
+Flask-CORS>=4.0
+Flask-SocketIO>=5.3
+python-socketio>=5.9
+eventlet>=0.35
+numpy
+scipy
 pandas
+shapely>=2.0
+pyproj
+geopandas
 pyogrio
 rasterio
+pillow
+requests

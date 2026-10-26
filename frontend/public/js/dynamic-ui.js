@@ -149,9 +149,9 @@ class DynamicUI {
 
         // Use toast notification for feedback
         if (window.toast) {
-            window.toast.info(`${scenarioName} - Connect to real-time data sources to enable this feature`);
+            window.toast.info(`${scenarioName}: showing the ${scenarioType} risk layer`);
         } else {
-            this.layerManager.showLayerInfo(`ℹ️ ${scenarioName} - Requires real-time data connection`);
+            this.layerManager.showLayerInfo(`ℹ️ ${scenarioName}: showing the ${scenarioType} risk layer`);
         }
     }
 
@@ -212,8 +212,8 @@ class DynamicUI {
                 BBOX: `${bounds.getSouth()},${bounds.getWest()},${bounds.getNorth()},${bounds.getEast()}`,
                 WIDTH: size.x,
                 HEIGHT: size.y,
-                I: Math.round(latlng.lng),
-                J: Math.round(latlng.lat)
+                I: Math.round(map.latLngToContainerPoint(latlng).x),
+                J: Math.round(map.latLngToContainerPoint(latlng).y)
             });
 
             const response = await fetch(`${this.config.server.baseUrl}?${params}`);
